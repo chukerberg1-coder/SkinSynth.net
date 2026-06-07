@@ -2,755 +2,109 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>SkinSynth | Кейсы, Маркет, Партнерская программа</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkinSynth | Партнерская программа</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: linear-gradient(145deg, #0c0f15 0%, #06080c 100%);
             font-family: 'Inter', sans-serif;
             color: #eef2ff;
-            line-height: 1.4;
-            overflow-x: hidden;
+            min-height: 100vh;
         }
-
-        .glow {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            background: radial-gradient(circle at 70% 20%, rgba(45, 212, 191, 0.1), transparent 70%);
-            z-index: 0;
-        }
-
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 0 24px;
-            position: relative;
-            z-index: 2;
+            padding: 40px 24px;
         }
-
-        .header {
-            backdrop-filter: blur(12px);
-            background: rgba(10, 14, 23, 0.85);
-            border-bottom: 1px solid rgba(66, 200, 200, 0.25);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            width: 100%;
-        }
-
-        .nav-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            padding: 16px 0;
-            gap: 16px;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #E0F2FE, #2dd4bf, #7aa2f7);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: -0.5px;
-            flex-shrink: 0;
-        }
-
-        .nav-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-            flex: 1;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 8px;
-            background: rgba(20, 28, 38, 0.6);
-            padding: 8px 20px;
-            border-radius: 60px;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(80, 140, 150, 0.3);
-        }
-
-        .nav-link {
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: 0.2s;
-            color: #b9c7d9;
-            padding: 6px 14px;
-            border-radius: 40px;
-            white-space: nowrap;
-        }
-
-        .nav-link.active {
-            background: rgba(45, 212, 191, 0.2);
-            color: #2dd4bf;
-            text-shadow: 0 0 6px rgba(45,212,191,0.3);
-        }
-
-        .nav-link:hover:not(.active) {
-            color: #ffffff;
-            background: rgba(255,255,245,0.05);
-        }
-
-        .user-area {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            margin-left: auto;
-        }
-
-        .balance-block {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(20, 28, 38, 0.9);
-            padding: 6px 18px;
-            border-radius: 60px;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(45,212,191,0.3);
-        }
-
-        .coin-icon {
-            width: 34px;
-            height: 34px;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
-        }
-
-        .balance-amount {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #fee7a0;
-        }
-
-        .steam-profile-btn {
-            background: #1a283b;
-            border: 1px solid #2c6e9e;
-            border-radius: 16px;
-            padding: 8px 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: #c3e2fc;
-            transition: 0.2s;
-            cursor: pointer;
-        }
-
-        .steam-profile-btn:hover {
-            background: #244160;
-            border-color: #5faee3;
-            color: white;
-            transform: scale(0.97);
-        }
-
-        .steam-icon {
-            width: 20px;
-            height: 20px;
-            filter: brightness(0) invert(1);
-        }
-
-        .online-counter {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(20, 28, 38, 0.8);
-            padding: 6px 14px;
-            border-radius: 60px;
-            border: 1px solid rgba(45,212,191,0.4);
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-        .online-dot {
-            width: 10px;
-            height: 10px;
-            background: #2dd4bf;
-            border-radius: 50%;
-            box-shadow: 0 0 8px #2dd4bf;
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% { opacity: 0.4; transform: scale(0.8); }
-            100% { opacity: 1; transform: scale(1.2); }
-        }
-        .online-count {
-            color: #2dd4bf;
-            font-weight: 700;
-        }
-
-        .hero {
-            margin: 45px 0 30px 0;
+        .partner-header {
             text-align: center;
+            margin-bottom: 40px;
         }
-
-        .hero h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            background: linear-gradient(145deg, #FFFFFF, #9ac7e7);
+        .partner-header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #fff, #2dd4bf);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
-
-        .hero p {
-            color: #8ea1bd;
-            margin-top: 12px;
+        .register-form {
+            background: rgba(18, 24, 34, 0.6);
+            border-radius: 28px;
+            padding: 32px;
+            border: 1px solid rgba(45,212,191,0.3);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .register-form h2 {
+            margin-bottom: 24px;
+            color: #2dd4bf;
+        }
+        .register-form input {
+            width: 100%;
+            background: #0f1420;
+            border: 1px solid #2c3e50;
+            padding: 14px 18px;
+            border-radius: 28px;
+            color: white;
+            margin-bottom: 20px;
             font-size: 1rem;
         }
-
-        .category-divider {
-            margin: 50px 0 25px 0;
-            position: relative;
+        .register-form input:focus {
+            border-color: #2dd4bf;
+            outline: none;
         }
-
-        .category-title {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            font-size: 1.8rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #fff, #7dd3fc);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: -0.5px;
-            text-align: center;
-        }
-
-        .category-title .icon {
-            font-size: 2rem;
-            background: none;
-            -webkit-background-clip: unset;
-            background-clip: unset;
-            color: #2dd4bf;
-        }
-
-        .category-divider hr {
+        .register-form button {
+            width: 100%;
+            background: linear-gradient(95deg, #2dd4bf, #1e9b8a);
             border: none;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #2dd4bf, #2dd4bf, transparent);
-            margin: 16px 0 0 0;
-            opacity: 0.5;
-        }
-
-        .cases-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-            gap: 34px;
-            margin: 30px 0 20px 0;
-        }
-
-        .case-card {
-            background: rgba(18, 24, 34, 0.5);
-            backdrop-filter: blur(12px);
-            border-radius: 32px;
-            overflow: hidden;
-            transition: transform 0.25s ease, box-shadow 0.3s, background 0.2s;
-            cursor: pointer;
-        }
-        .case-card:hover {
-            transform: translateY(-6px);
-            background: rgba(25, 32, 44, 0.7);
-            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.5);
-        }
-        .img-wrapper {
-            background: rgba(8, 12, 20, 0.4);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 220px;
-            padding: 28px;
-        }
-        .case-img {
-            max-width: 100%;
-            max-height: 160px;
-            object-fit: contain;
-            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.5));
-            transition: transform 0.2s;
-        }
-        .case-card:hover .case-img {
-            transform: scale(1.03);
-        }
-        .case-info {
-            padding: 12px 20px 26px;
-            text-align: center;
-        }
-        .case-name {
-            font-size: 1.35rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, #fff, #b7e0ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        .case-price {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: #151e2c;
-            padding: 8px 20px;
-            border-radius: 60px;
-            margin-top: 12px;
-        }
-        .price-coin {
-            width: 30px;
-            height: 30px;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
-        }
-        .price-value {
-            color: #fee7a0;
-            font-size: 1.3rem;
-            font-weight: 800;
-        }
-
-        .footer {
-            margin-top: 60px;
-            padding: 40px 0 30px;
-            border-top: 1px solid rgba(80,140,150,0.2);
-            background: rgba(6, 8, 12, 0.6);
-            backdrop-filter: blur(8px);
-        }
-        .footer-content {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 40px;
-            margin-bottom: 30px;
-        }
-        .footer-brand { flex: 1; min-width: 200px; }
-        .footer-brand h3 {
-            font-size: 1.5rem;
-            background: linear-gradient(135deg, #E0F2FE, #2dd4bf);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 10px;
-        }
-        .footer-brand .copyright { color: rgba(142, 161, 189, 0.6); font-size: 0.85rem; margin-top: 8px; }
-        .footer-links { flex: 2; display: flex; flex-wrap: wrap; gap: 40px; justify-content: flex-end; }
-        .footer-col { min-width: 140px; }
-        .footer-col h4 { color: #7dd3fc; font-size: 0.9rem; font-weight: 600; margin-bottom: 12px; }
-        .footer-col a, .footer-col span { display: block; color: rgba(142, 161, 189, 0.7); font-size: 0.8rem; margin-bottom: 8px; cursor: pointer; }
-        .footer-col a:hover { color: #2dd4bf; }
-        .social-icons { display: flex; gap: 15px; margin-top: 8px; }
-        .social-icon {
-            width: 32px; height: 32px;
-            background: rgba(45,212,191,0.15);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: #7dd3fc;
-        }
-        .social-icon:hover { background: rgba(45,212,191,0.4); transform: translateY(-2px); }
-        
-        .partner-footer-btn {
-            background: linear-gradient(135deg, #2dd4bf, #1a7a6e);
-            border: none;
-            border-radius: 16px;
-            padding: 6px 16px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            color: white;
-            transition: 0.2s;
-            cursor: pointer;
-            display: inline-block;
-            margin-top: 5px;
-        }
-        .partner-footer-btn:hover {
-            transform: scale(0.97);
-            background: linear-gradient(135deg, #1a7a6e, #0f5a50);
-            box-shadow: 0 0 10px rgba(45,212,191,0.4);
-        }
-        
-        @media (max-width: 780px) {
-            .nav-links { gap: 4px; padding: 6px 12px; flex-wrap: wrap; justify-content: center; }
-            .nav-link { font-size: 0.7rem; padding: 4px 8px; }
-            .hero h1 { font-size: 2rem; }
-            .cases-grid { gap: 20px; }
-            .img-wrapper { height: 190px; }
-            .steam-profile-btn span { display: none; }
-            .coin-icon { width: 28px; height: 28px; }
-            .price-coin { width: 26px; height: 26px; }
-            .footer-content { flex-direction: column; gap: 25px; }
-            .online-counter span:not(.online-count) { display: none; }
-        }
-        .toast-msg {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background: #1e2a3aee;
-            backdrop-filter: blur(12px);
-            border-left: 5px solid #2dd4bf;
-            padding: 12px 24px;
-            border-radius: 20px;
-            font-weight: 500;
-            color: #fff;
-            z-index: 200;
-            animation: fadeSlide 0.25s ease;
-        }
-        @keyframes fadeSlide {
-            from { opacity: 0; transform: translateX(40px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(14px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1100;
-            visibility: hidden;
-            opacity: 0;
-            transition: 0.2s;
-        }
-        .modal-overlay.active { visibility: visible; opacity: 1; }
-        .modal-container {
-            background: linear-gradient(145deg, #11161f, #0a0e16);
-            border-radius: 36px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 85vh;
-            overflow-y: auto;
-            padding: 28px 32px;
-            border: 1px solid rgba(45,212,191,0.5);
-        }
-        .modal-container h2 {
-            font-size: 1.9rem;
-            background: linear-gradient(135deg, #fff, #7dd3fc);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 22px;
-            border-left: 4px solid #2dd4bf;
-            padding-left: 18px;
-        }
-        .modal-container p { font-size: 0.9rem; line-height: 1.5; color: #cad2e3; margin-bottom: 8px; }
-        .modal-close-btn { display: flex; justify-content: flex-end; margin-top: 20px; }
-        .modal-close-btn button {
-            background: rgba(45,212,191,0.2);
-            border: 1px solid #2dd4bf;
-            padding: 8px 28px;
+            padding: 14px;
             border-radius: 40px;
+            font-weight: bold;
+            color: #0a0f1a;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .register-form button:hover {
+            transform: scale(0.98);
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
             color: #2dd4bf;
             cursor: pointer;
         }
-        .steam-modal {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            visibility: hidden;
-            opacity: 0;
-            transition: 0.2s;
-        }
-        .steam-modal.active { visibility: visible; opacity: 1; }
-        .steam-modal-content {
-            background: linear-gradient(145deg, #151e2c, #0b1018);
-            border-radius: 32px;
-            max-width: 380px;
-            width: 90%;
-            padding: 32px 24px;
-            text-align: center;
-            border: 1px solid rgba(45,212,191,0.5);
-        }
-        .steam-login-btn {
-            background: #1b2838;
-            border-radius: 40px;
-            padding: 14px 28px;
-            color: white;
-            font-weight: 700;
-            cursor: pointer;
-            border: 1px solid #66c0f4;
-        }
-        .corp-link { color: #2dd4bf; cursor: pointer; }
-        .email-highlight { color: #2dd4bf; font-weight: 600; }
     </style>
 </head>
 <body>
-<div class="glow"></div>
-<header class="header">
     <div class="container">
-        <div class="nav-bar">
-            <div class="logo">SkinSynth</div>
-            <div class="nav-wrapper">
-                <div class="nav-links">
-                    <div class="nav-link active" data-tab="cases">Кейсы</div>
-                    <div class="nav-link" data-tab="upgrades">Апгрейды</div>
-                    <div class="nav-link" data-tab="crash">Краш</div>
-                    <div class="nav-link" data-tab="bets">Ставки</div>
-                    <div class="nav-link" data-tab="market">Маркет</div>
-                </div>
-                <div class="user-area">
-                    <div class="online-counter"><div class="online-dot"></div><span>Онлайн:</span><span class="online-count" id="onlineCount">0</span></div>
-                    <div class="balance-block">
-                        <img src="img/oblic/money.png" class="coin-icon" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'34\' height=\'34\' viewBox=\'0 0 24 24\' fill=\'%23F9A825\'%3E%3Ccircle cx=\'12\' cy=\'12\' r=\'10\' fill=\'%23FFD966\'/%3E%3Ctext x=\'12\' y=\'17\' text-anchor=\'middle\' fill=\'%238B5A2B\' font-size=\'12\'%3E$%3C/text%3E%3C/svg%3E'">
-                        <span class="balance-amount">12,540</span>
-                    </div>
-                    <div class="steam-profile-btn" id="steamAuthBtn"><svg class="steam-icon" viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49l.2-.28c.43-.59.73-1.27.88-1.99l.28-1.2c-.56-.29-1.04-.68-1.42-1.15-.94-1.16-1.42-2.63-1.42-4.17 0-3.53 2.87-6.4 6.4-6.4s6.4 2.87 6.4 6.4c0 1.54-.48 3.01-1.42 4.17-.38.47-.86.86-1.42 1.15l.28 1.2c.15.72.45 1.4.88 1.99l.2.28C19.13 20.17 22 16.42 22 12c0-5.52-4.48-10-10-10z"/></svg><span>Steam</span></div>
-                </div>
-            </div>
+        <div class="partner-header">
+            <h1>🤝 Партнерская программа SkinSynth</h1>
+            <p>Зарабатывайте вместе с нами!</p>
+        </div>
+        <div class="register-form">
+            <h2>Регистрация партнера</h2>
+            <input type="text" id="partnerName" placeholder="Ваше имя">
+            <input type="email" id="partnerEmail" placeholder="Email">
+            <input type="text" id="partnerSteam" placeholder="Steam ID">
+            <button id="registerPartnerBtn">Зарегистрироваться</button>
+            <a class="back-link" onclick="window.close()">Закрыть окно</a>
         </div>
     </div>
-</header>
-<main class="container">
-    <div class="hero" id="heroBlock"><h1>Открой легендарные кейсы CS2</h1><p>Эксклюзивные коллекции и редкие предметы</p></div>
-    <div id="dynamicContent"></div>
-</main>
-<footer class="footer">
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-brand"><h3>SkinSynth</h3><div class="copyright">© 2026 SkinSynth</div></div>
-            <div class="footer-links">
-                <div class="footer-col">
-                    <h4>Документы</h4>
-                    <a id="partnerProgramLink">Партнерская программа</a>
-                    <a id="termsOfUseLink">Пользовательское соглашение</a>
-                    <a id="privacyPolicyLink">Политика конфиденциальности</a>
-                    <button class="partner-footer-btn" id="partnerRedirectBtn">Сотрудничество</button>
-                </div>
-                <div class="footer-col">
-                    <h4>Инфо</h4>
-                    <a id="contactsLink">Контакты</a>
-                    <a id="cookiesLink">Cookies</a>
-                    <a>FAQ</a>
-                </div>
-                <div class="footer-col">
-                    <h4>Контакты</h4>
-                    <span>📧 kirielgroup@gmail.com</span>
-                    <div class="social-icons">
-                        <div class="social-icon">📘</div>
-                        <div class="social-icon">🐦</div>
-                        <div class="social-icon">📷</div>
-                        <div class="social-icon">🎮</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
-
-<!-- Модальные окна -->
-<div id="corpInfoModal" class="modal-overlay"><div class="modal-container"><h2>SkinSynth КОРПОРАТИВНАЯ ИНФОРМАЦИЯ</h2><p>Перед использованием сайта просьба ознакомиться с:</p><p><strong>1.1</strong> <a class="corp-link" id="corpTermsLink">Пользовательское соглашение</a></p><p><strong>1.2</strong> <a class="corp-link" id="corpPrivacyLink">Политика конфиденциальности</a></p><p><strong>1.3</strong> <a class="corp-link" id="corpCookiesLink">Политика cookies</a></p><p><strong>Остались вопросы?</strong></p><p><strong>2.3</strong> Напишите нам на <span class="email-highlight">kirielgroup@gmail.com</span></p><div class="modal-close-btn"><button id="closeCorpInfoBtn">Закрыть</button></div></div></div>
-<div id="termsModal" class="modal-overlay"><div class="modal-container"><h2>Пользовательское соглашение</h2><p>Полный текст пользовательского соглашения...</p><div class="modal-close-btn"><button id="closeTermsBtn">Закрыть</button></div></div></div>
-<div id="privacyModal" class="modal-overlay"><div class="modal-container"><h2>Политика конфиденциальности</h2><p>Полный текст политики конфиденциальности...</p><div class="modal-close-btn"><button id="closePrivacyBtn">Закрыть</button></div></div></div>
-<div id="cookiesModal" class="modal-overlay"><div class="modal-container"><h2>Политика Cookie</h2><p>Полный текст политики cookie...</p><div class="modal-close-btn"><button id="closeCookiesBtn">Закрыть</button></div></div></div>
-<div id="steamModal" class="steam-modal"><div class="steam-modal-content"><h3>⚡ Вход через Steam</h3><button id="realSteamLoginBtn" class="steam-login-btn">Войти через Steam</button><button class="close-modal" id="closeModalBtn">Закрыть</button></div></div>
-
-<script>
-    // ========== ПОЛНОЦЕННЫЙ СЧЕТЧИК ОНЛАЙН ==========
-    let visitorId = localStorage.getItem('visitor_id');
-    if (!visitorId) {
-        visitorId = 'visitor_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        localStorage.setItem('visitor_id', visitorId);
-    }
-    
-    function updateOnlineCount() {
-        fetch('counter.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'action=heartbeat&visitor_id=' + encodeURIComponent(visitorId)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.online !== undefined) {
-                document.getElementById('onlineCount').textContent = data.online;
-                console.log('Online updated:', data.online);
+    <script>
+        document.getElementById('registerPartnerBtn').addEventListener('click', function() {
+            const name = document.getElementById('partnerName').value;
+            const email = document.getElementById('partnerEmail').value;
+            const steam = document.getElementById('partnerSteam').value;
+            if (name && email && steam) {
+                alert('Заявка отправлена! Наш менеджер свяжется с вами в ближайшее время.');
+                window.close();
+            } else {
+                alert('Пожалуйста, заполните все поля');
             }
-        })
-        .catch(error => console.log('Heartbeat error:', error));
-    }
-    
-    // Регистрация посетителя
-    fetch('counter.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'action=register&visitor_id=' + encodeURIComponent(visitorId)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.online !== undefined) {
-            document.getElementById('onlineCount').textContent = data.online;
-            console.log('Registered, online:', data.online);
-        }
-    })
-    .catch(error => console.log('Register error:', error));
-    
-    // Heartbeat каждые 30 секунд
-    setInterval(() => { updateOnlineCount(); }, 30000);
-    
-    // При закрытии страницы отправляем сигнал об уходе
-    window.addEventListener('beforeunload', () => {
-        fetch('counter.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'action=unregister&visitor_id=' + encodeURIComponent(visitorId),
-            keepalive: true
         });
-    });
-    
-    // ========== ОСТАЛЬНОЙ КОД САЙТА ==========
-    if (!localStorage.getItem('skinsynth_data')) {
-        const defaultData = {
-            users: [
-                { id: 1, name: "Player_One", steamId: "76561198000000001", tradeLink: "https://steamcommunity.com/trade/1", balance: 1250, totalDeposit: 5000, totalWithdraw: 3750, cases: ["Открыл кейс 'Револьверный' - выиграл AK-47"], upgrades: ["Апгрейд M4A4 → M4A1-S"], market: ["Продал скин за 150 монет"], crash: ["Ставка 100 монет, множитель 2.5x"], bets: ["Ставка на NAVI - 200 монет"] },
-                { id: 2, name: "CS2_Pro", steamId: "76561198000000002", tradeLink: "https://steamcommunity.com/trade/2", balance: 3400, totalDeposit: 10000, totalWithdraw: 6600, cases: ["Открыл 'Золотой кейс' - выиграл нож"], upgrades: [], market: [], crash: [], bets: [] },
-                { id: 3, name: "SkinCollector", steamId: "76561198000000003", tradeLink: "https://steamcommunity.com/trade/3", balance: 890, totalDeposit: 2000, totalWithdraw: 1110, cases: [], upgrades: [], market: [], crash: [], bets: [] }
-            ],
-            promocodes: [
-                { id: 1, name: "WELCOME10", type: "balance", value: 10, uses: 145, endDate: "2026-12-31" },
-                { id: 2, name: "FREEBOX", type: "case", value: "Золотой кейс", uses: 32, endDate: "2026-10-15" }
-            ],
-            categories: [
-                { id: 1, name: "Фирменные кейсы", cases: ["Револьверный кейс", "Кейс «Спектр»", "Классический кейс"] },
-                { id: 2, name: "Раритетные кейсы", cases: ["Кейс «Прорыв»", "Кейс «Гамма»"] }
-            ],
-            cases: [
-                { id: 1, name: "Револьверный кейс", price: 29, category: "Фирменные кейсы", image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%232dd4bf'%3E%3Crect width='24' height='24' fill='%23111'/%3E%3Ctext x='5' y='16' fill='white'%3E🎁%3C/text%3E%3C/svg%3E", items: ["AK-47 | Фронтовик", "M4A4 | Зенит", "AWP | Паучиха"] },
-                { id: 2, name: "Золотой кейс", price: 659, category: "Фирменные кейсы", image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%232dd4bf'%3E%3Crect width='24' height='24' fill='%23111'/%3E%3Ctext x='5' y='16' fill='white'%3E🎁%3C/text%3E%3C/svg%3E", items: ["Нож-бабочка", "Голубая сталь", "Рубиновый нож"] }
-            ],
-            items: [
-                { id: 1, name: "AK-47 | Фронтовик", rarity: "classified", image: "https://community.cloudflare.steamstatic.com/economy/image/class/730/1", price: 1250, steamLink: "https://steamcommunity.com/market/listings/730/AK-47%20%7C%20Frontside%20Misty" },
-                { id: 2, name: "AWP | Паучиха", rarity: "covert", image: "https://community.cloudflare.steamstatic.com/economy/image/class/730/2", price: 4200, steamLink: "https://steamcommunity.com/market/listings/730/AWP%20%7C%20Gungnir" }
-            ],
-            stats: {
-                totalDeposit: { today: 12500, week: 87400, month: 342000 },
-                totalWithdraw: { today: 8300, week: 62100, month: 256000 },
-                lastDeposit: { user: "Player_One", amount: 500, date: "2026-06-07 14:23" },
-                lastWithdraw: { user: "CS2_Pro", amount: 1200, date: "2026-06-06 19:45" }
-            }
-        };
-        localStorage.setItem('skinsynth_data', JSON.stringify(defaultData));
-    }
-
-    function loadSiteData() { return JSON.parse(localStorage.getItem('skinsynth_data')); }
-    let siteData = loadSiteData();
-
-    function getCasesFromData() { return siteData && siteData.cases ? siteData.cases : []; }
-    function getCategoriesFromData() { return siteData && siteData.categories ? siteData.categories : []; }
-
-    function renderCases() {
-        const container = document.getElementById('dynamicContent');
-        if (!container) return;
-        const cases = getCasesFromData();
-        const categories = getCategoriesFromData();
-        if (cases.length === 0) { container.innerHTML = '<div style="text-align:center;padding:60px;">Нет доступных кейсов</div>'; return; }
-        container.innerHTML = '';
-        categories.forEach(cat => {
-            const catCases = cases.filter(c => c.category === cat.name);
-            if (catCases.length === 0) return;
-            const section = document.createElement('div'); section.className = 'category-divider';
-            section.innerHTML = `<div class="category-title"><span class="icon">🏷️</span><span>${cat.name}</span></div><hr><div class="cases-grid"></div>`;
-            const grid = section.querySelector('.cases-grid');
-            catCases.forEach(cs => {
-                const card = document.createElement('div'); card.className = 'case-card';
-                card.innerHTML = `<div class="img-wrapper"><img class="case-img" src="${cs.image}" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22100%22%20height=%22100%22%20viewBox=%220%200%2024%2024%22%20fill=%22%232dd4bf%22%3E%3Crect%20width=%2224%22%20height=%2224%22%20fill=%22%23111%22/%3E%3Ctext%20x=%225%22%20y=%2216%22%20fill=%22white%22%3E🎁%3C/text%3E%3C/svg%3E'"></div><div class="case-info"><div class="case-name">${cs.name}</div><div class="case-price"><img src="img/oblic/money.png" class="price-coin" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2226%22%20height=%2226%22%20viewBox=%220%200%2024%2024%22%20fill=%22%23F9A825%22%3E%3Ccircle%20cx=%2212%22%20cy=%2212%22%20r=%2210%22%20fill=%22%23FFD966%22/%3E%3Ctext%20x=%2212%22%20y=%2217%22%20text-anchor=%22middle%22%20fill=%22%238B5A2B%22%3E$%3C/text%3E%3C/svg%3E'"><span class="price-value">${cs.price}</span></div></div>`;
-                card.addEventListener('click', () => showNotification(`🔑 ${cs.name} — ${cs.price} монет`));
-                grid.appendChild(card);
-            });
-            container.appendChild(section);
-        });
-        document.getElementById('heroBlock').style.display = 'block';
-    }
-
-    let activeToast = null;
-    function showNotification(msg, dur = 2500) {
-        if (activeToast) activeToast.remove();
-        const toast = document.createElement('div'); toast.className = 'toast-msg'; toast.textContent = msg;
-        document.body.appendChild(toast); activeToast = toast;
-        setTimeout(() => { if (toast?.remove) toast.remove(); if (activeToast === toast) activeToast = null; }, dur);
-    }
-
-    function switchTab(tab) {
-        const container = document.getElementById('dynamicContent');
-        const hero = document.getElementById('heroBlock');
-        if (tab === 'cases') { renderCases(); hero.style.display = 'block'; }
-        else if (tab === 'upgrades') { hero.style.display = 'none'; container.innerHTML = `<div style="text-align:center;padding:70px"><div style="font-size:72px;">⚡</div><h3>Апгрейды оружия</h3><p>Скоро</p></div>`; showNotification('Апгрейды');}
-        else if (tab === 'crash') { hero.style.display = 'none'; container.innerHTML = `<div style="text-align:center;padding:70px"><div style="font-size:74px;">📈</div><h3>Краш игра</h3></div>`; showNotification('Краш');}
-        else if (tab === 'bets') { hero.style.display = 'none'; container.innerHTML = `<div style="text-align:center;padding:70px"><div style="font-size:68px;">🏆</div><h3>Ставки на CS2</h3></div>`; showNotification('Ставки');}
-        else if (tab === 'market') { hero.style.display = 'none'; container.innerHTML = `<div style="text-align:center;padding:70px"><div style="font-size:68px;">🛒</div><h3>Маркет скинов</h3></div>`; showNotification('Маркет');}
-    }
-
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-            const tab = link.dataset.tab;
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
-            switchTab(tab);
-        });
-    });
-
-    document.getElementById('partnerRedirectBtn')?.addEventListener('click', () => { window.location.href = 'admin.html'; });
-    document.getElementById('partnerProgramLink')?.addEventListener('click', (e) => { e.preventDefault(); window.open('https://example.com/register', '_blank'); });
-
-    const termsModal = document.getElementById('termsModal');
-    const privacyModal = document.getElementById('privacyModal');
-    const corpInfoModal = document.getElementById('corpInfoModal');
-    const cookiesModal = document.getElementById('cookiesModal');
-    const steamModalDiv = document.getElementById('steamModal');
-    
-    document.getElementById('termsOfUseLink')?.addEventListener('click', (e) => { e.preventDefault(); termsModal.classList.add('active'); });
-    document.getElementById('privacyPolicyLink')?.addEventListener('click', (e) => { e.preventDefault(); privacyModal.classList.add('active'); });
-    document.getElementById('contactsLink')?.addEventListener('click', (e) => { e.preventDefault(); corpInfoModal.classList.add('active'); });
-    document.getElementById('cookiesLink')?.addEventListener('click', (e) => { e.preventDefault(); cookiesModal.classList.add('active'); });
-    document.getElementById('steamAuthBtn')?.addEventListener('click', () => steamModalDiv.classList.add('active'));
-    
-    document.getElementById('closeTermsBtn')?.addEventListener('click', () => termsModal.classList.remove('active'));
-    document.getElementById('closePrivacyBtn')?.addEventListener('click', () => privacyModal.classList.remove('active'));
-    document.getElementById('closeCorpInfoBtn')?.addEventListener('click', () => corpInfoModal.classList.remove('active'));
-    document.getElementById('closeCookiesBtn')?.addEventListener('click', () => cookiesModal.classList.remove('active'));
-    document.getElementById('closeModalBtn')?.addEventListener('click', () => steamModalDiv.classList.remove('active'));
-    document.getElementById('realSteamLoginBtn')?.addEventListener('click', () => { showNotification('Перенаправление...'); setTimeout(() => { alert('Демо-вход'); steamModalDiv.classList.remove('active'); }, 600); });
-    
-    document.getElementById('corpTermsLink')?.addEventListener('click', (e) => { e.preventDefault(); corpInfoModal.classList.remove('active'); termsModal.classList.add('active'); });
-    document.getElementById('corpPrivacyLink')?.addEventListener('click', (e) => { e.preventDefault(); corpInfoModal.classList.remove('active'); privacyModal.classList.add('active'); });
-    document.getElementById('corpCookiesLink')?.addEventListener('click', (e) => { e.preventDefault(); corpInfoModal.classList.remove('active'); cookiesModal.classList.add('active'); });
-    
-    [termsModal, privacyModal, corpInfoModal, cookiesModal, steamModalDiv].forEach(modal => {
-        if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
-    });
-
-    renderCases();
-    
-    setInterval(() => {
-        const newData = loadSiteData();
-        if (JSON.stringify(newData) !== JSON.stringify(siteData)) {
-            siteData = newData;
-            if (document.querySelector('.category-divider')) renderCases();
-        }
-    }, 2000);
-</script>
+    </script>
 </body>
 </html>
