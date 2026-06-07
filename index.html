@@ -7,7 +7,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             background: linear-gradient(145deg, #0c0f15 0%, #06080c 100%);
             font-family: 'Inter', sans-serif;
@@ -15,6 +20,7 @@
             line-height: 1.4;
             overflow-x: hidden;
         }
+
         .glow {
             position: fixed;
             width: 100%;
@@ -25,6 +31,7 @@
             background: radial-gradient(circle at 70% 20%, rgba(45, 212, 191, 0.1), transparent 70%);
             z-index: 0;
         }
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -32,6 +39,7 @@
             position: relative;
             z-index: 2;
         }
+
         .header {
             backdrop-filter: blur(12px);
             background: rgba(10, 14, 23, 0.85);
@@ -41,6 +49,7 @@
             z-index: 100;
             width: 100%;
         }
+
         .nav-bar {
             display: flex;
             align-items: center;
@@ -49,6 +58,7 @@
             padding: 16px 0;
             gap: 16px;
         }
+
         .logo {
             font-size: 1.8rem;
             font-weight: 800;
@@ -59,6 +69,7 @@
             letter-spacing: -0.5px;
             flex-shrink: 0;
         }
+
         .nav-wrapper {
             display: flex;
             align-items: center;
@@ -67,6 +78,7 @@
             justify-content: flex-end;
             flex: 1;
         }
+
         .nav-links {
             display: flex;
             gap: 8px;
@@ -76,6 +88,7 @@
             backdrop-filter: blur(4px);
             border: 1px solid rgba(80, 140, 150, 0.3);
         }
+
         .nav-link {
             font-weight: 600;
             font-size: 0.95rem;
@@ -86,21 +99,25 @@
             border-radius: 40px;
             white-space: nowrap;
         }
+
         .nav-link.active {
             background: rgba(45, 212, 191, 0.2);
             color: #2dd4bf;
             text-shadow: 0 0 6px rgba(45,212,191,0.3);
         }
+
         .nav-link:hover:not(.active) {
             color: #ffffff;
             background: rgba(255,255,245,0.05);
         }
+
         .user-area {
             display: flex;
             align-items: center;
             gap: 18px;
             margin-left: auto;
         }
+
         .balance-block {
             display: flex;
             align-items: center;
@@ -111,17 +128,20 @@
             backdrop-filter: blur(4px);
             border: 1px solid rgba(45,212,191,0.3);
         }
+
         .coin-icon {
             width: 34px;
             height: 34px;
             object-fit: contain;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
         }
+
         .balance-amount {
             font-size: 1.2rem;
             font-weight: 700;
             color: #fee7a0;
         }
+
         .steam-profile-btn {
             background: #1a283b;
             border: 1px solid #2c6e9e;
@@ -136,17 +156,20 @@
             transition: 0.2s;
             cursor: pointer;
         }
+
         .steam-profile-btn:hover {
             background: #244160;
             border-color: #5faee3;
             color: white;
             transform: scale(0.97);
         }
+
         .steam-icon {
             width: 20px;
             height: 20px;
             filter: brightness(0) invert(1);
         }
+
         .online-counter {
             display: flex;
             align-items: center;
@@ -174,10 +197,12 @@
             color: #2dd4bf;
             font-weight: 700;
         }
+
         .hero {
             margin: 45px 0 30px 0;
             text-align: center;
         }
+
         .hero h1 {
             font-size: 3rem;
             font-weight: 700;
@@ -186,15 +211,18 @@
             background-clip: text;
             color: transparent;
         }
+
         .hero p {
             color: #8ea1bd;
             margin-top: 12px;
             font-size: 1rem;
         }
+
         .category-divider {
             margin: 50px 0 25px 0;
             position: relative;
         }
+
         .category-title {
             display: flex;
             align-items: center;
@@ -209,6 +237,7 @@
             letter-spacing: -0.5px;
             text-align: center;
         }
+
         .category-title .icon {
             font-size: 2rem;
             background: none;
@@ -216,6 +245,7 @@
             background-clip: unset;
             color: #2dd4bf;
         }
+
         .category-divider hr {
             border: none;
             height: 1px;
@@ -223,12 +253,14 @@
             margin: 16px 0 0 0;
             opacity: 0.5;
         }
+
         .cases-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
             gap: 34px;
             margin: 30px 0 20px 0;
         }
+
         .case-card {
             background: rgba(18, 24, 34, 0.5);
             backdrop-filter: blur(12px);
@@ -293,6 +325,28 @@
             font-size: 1.3rem;
             font-weight: 800;
         }
+
+        /* Новая кнопка Сотрудничество */
+        .partner-btn {
+            background: linear-gradient(135deg, #2dd4bf, #1a7a6e);
+            border: none;
+            border-radius: 16px;
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: white;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .partner-btn:hover {
+            transform: scale(0.97);
+            background: linear-gradient(135deg, #1a7a6e, #0f5a50);
+            box-shadow: 0 0 15px rgba(45,212,191,0.4);
+        }
+
         .footer {
             margin-top: 60px;
             padding: 40px 0 30px;
@@ -341,6 +395,7 @@
             .cases-grid { gap: 20px; }
             .img-wrapper { height: 190px; }
             .steam-profile-btn span { display: none; }
+            .partner-btn span { display: none; }
             .coin-icon { width: 28px; height: 28px; }
             .price-coin { width: 26px; height: 26px; }
             .footer-content { flex-direction: column; gap: 25px; }
@@ -464,6 +519,7 @@
                     <div class="online-counter"><div class="online-dot"></div><span>Онлайн:</span><span class="online-count" id="onlineCount">0</span></div>
                     <div class="balance-block"><img src="img/oblic/money.png" class="coin-icon" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'34\' height=\'34\' viewBox=\'0 0 24 24\' fill=\'%23F9A825\'%3E%3Ccircle cx=\'12\' cy=\'12\' r=\'10\' fill=\'%23FFD966\'/%3E%3Ctext x=\'12\' y=\'17\' text-anchor=\'middle\' fill=\'%238B5A2B\' font-size=\'12\'%3E$%3C/text%3E%3C/svg%3E';"><span class="balance-amount">12,540</span></div>
                     <div class="steam-profile-btn" id="steamAuthBtn"><svg class="steam-icon" viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49l.2-.28c.43-.59.73-1.27.88-1.99l.28-1.2c-.56-.29-1.04-.68-1.42-1.15-.94-1.16-1.42-2.63-1.42-4.17 0-3.53 2.87-6.4 6.4-6.4s6.4 2.87 6.4 6.4c0 1.54-.48 3.01-1.42 4.17-.38.47-.86.86-1.42 1.15l.28 1.2c.15.72.45 1.4.88 1.99l.2.28C19.13 20.17 22 16.42 22 12c0-5.52-4.48-10-10-10z"/></svg><span>Steam</span></div>
+                    <button class="partner-btn" id="partnerRedirectBtn">🤝 Сотрудничество</button>
                 </div>
             </div>
         </div>
@@ -574,6 +630,15 @@
         });
     });
 
+    // Кнопка "Сотрудничество" - ведёт на админ-панель
+    const partnerRedirectBtn = document.getElementById('partnerRedirectBtn');
+    if (partnerRedirectBtn) {
+        partnerRedirectBtn.addEventListener('click', () => {
+            window.location.href = 'admin.html';
+        });
+    }
+
+    // Партнерская программа (открывается в новом окне)
     document.getElementById('partnerProgramLink')?.addEventListener('click', (e) => {
         e.preventDefault();
         window.open('https://example.com/register', '_blank');
