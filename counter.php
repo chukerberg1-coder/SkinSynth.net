@@ -10,7 +10,7 @@ $timeout = 60; // секунд бездействия
 
 // Создаем файл если не существует
 if (!file_exists($dataFile)) {
-    $defaultData = ['visitors' => [], 'online' => 0, 'last_cleanup' => time()];
+    $defaultData = ['visitors' => [], 'online' => 0];
     file_put_contents($dataFile, json_encode($defaultData));
     chmod($dataFile, 0666);
 }
@@ -18,14 +18,15 @@ if (!file_exists($dataFile)) {
 // Загружаем данные
 $data = json_decode(file_get_contents($dataFile), true);
 if (!$data) {
-    $data = ['visitors' => [], 'online' => 0, 'last_cleanup' => time()];
+    $data = ['visitors' => [], 'online' => 0];
 }
 
 $action = isset($_POST['action']) ? $_POST['action'] : '';
 $visitorId = isset($_POST['visitor_id']) ? $_POST['visitor_id'] : '';
 
-// Очистка неактивных
 $currentTime = time();
+
+// Очистка неактивных
 $cleaned = false;
 foreach ($data['visitors'] as $id => $lastSeen) {
     if ($currentTime - $lastSeen > $timeout) {
@@ -43,10 +44,7 @@ if ($action === 'register') {
         $data['online'] = count($data['visitors']);
     }
 } elseif ($action === 'heartbeat') {
-    if ($visitorId && isset($data['visitors'][$visitorId])) {
-        $data['visitors'][$visitorId] = $currentTime;
-    } elseif ($visitorId && !isset($data['visitors'][$visitorId])) {
-        // Если посетитель потерялся, регистрируем заново
+    if ($visitorId) {
         $data['visitors'][$visitorId] = $currentTime;
         $data['online'] = count($data['visitors']);
     }
