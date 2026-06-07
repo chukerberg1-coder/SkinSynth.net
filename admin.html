@@ -326,7 +326,7 @@
         .case-item:hover, .category-item:hover, .item-card:hover {
             background: rgba(45,212,191,0.1);
         }
-        .delete-cat-btn {
+        .delete-cat-btn, .delete-item-btn {
             background: rgba(255,80,80,0.2);
             border: 1px solid #ff5050;
             padding: 4px 12px;
@@ -375,7 +375,6 @@
 </head>
 <body>
 
-<!-- Окно входа -->
 <div id="loginOverlay" class="login-overlay">
     <div class="login-container">
         <h2>🔐 Админ-панель</h2>
@@ -386,7 +385,6 @@
     </div>
 </div>
 
-<!-- Админ панель (скрыта) -->
 <div id="adminPanel" style="display: none;">
     <div class="admin-wrapper">
         <div class="sidebar">
@@ -422,7 +420,7 @@
 </div>
 
 <script>
-    // ========== ИНИЦИАЛИЗАЦИЯ ДАННЫХ ==========
+    // Инициализация данных
     if (!localStorage.getItem('skinsynth_admin_data')) {
         const defaultData = {
             users: [
@@ -439,8 +437,8 @@
                 { id: 2, name: "Раритетные кейсы", cases: ["Кейс «Прорыв»", "Кейс «Гамма»"] }
             ],
             cases: [
-                { id: 1, name: "Револьверный кейс", price: 29, category: "Фирменные кейсы", image: "img/case/кейс1.png", items: ["AK-47 | Фронтовик", "M4A4 | Зенит", "AWP | Паучиха"] },
-                { id: 2, name: "Золотой кейс", price: 659, category: "Фирменные кейсы", image: "img/case/кейс8.png", items: ["Нож-бабочка", "Голубая сталь", "Рубиновый нож"] }
+                { id: 1, name: "Револьверный кейс", price: 29, category: "Фирменные кейсы", image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%232dd4bf'%3E%3Crect width='24' height='24' fill='%23111'/%3E%3Ctext x='5' y='16' fill='white'%3E🎁%3C/text%3E%3C/svg%3E", items: ["AK-47 | Фронтовик", "M4A4 | Зенит", "AWP | Паучиха"] },
+                { id: 2, name: "Золотой кейс", price: 659, category: "Фирменные кейсы", image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%232dd4bf'%3E%3Crect width='24' height='24' fill='%23111'/%3E%3Ctext x='5' y='16' fill='white'%3E🎁%3C/text%3E%3C/svg%3E", items: ["Нож-бабочка", "Голубая сталь", "Рубиновый нож"] }
             ],
             items: [
                 { id: 1, name: "AK-47 | Фронтовик", rarity: "classified", image: "https://community.cloudflare.steamstatic.com/economy/image/class/730/1", price: 1250, steamLink: "https://steamcommunity.com/market/listings/730/AK-47%20%7C%20Frontside%20Misty" },
@@ -469,7 +467,6 @@
     let siteData = loadData();
     let selectedUser = null;
 
-    // ========== АУТЕНТИФИКАЦИЯ ==========
     const loginOverlay = document.getElementById('loginOverlay');
     const adminPanel = document.getElementById('adminPanel');
     const loginBtn = document.getElementById('loginBtn');
@@ -480,7 +477,6 @@
     function doLogin() {
         const login = loginInput.value.trim();
         const password = passwordInput.value;
-        
         if (login === "Kiriel" && password === "sxz9(K*8df_Violetta1LOVE") {
             loginOverlay.style.display = 'none';
             adminPanel.style.display = 'block';
@@ -492,12 +488,9 @@
 
     loginBtn.onclick = doLogin;
     passwordInput.onkeypress = function(e) {
-        if (e.key === 'Enter') {
-            doLogin();
-        }
+        if (e.key === 'Enter') doLogin();
     };
 
-    // ========== НАВИГАЦИЯ ==========
     function loadPage(page) {
         const content = document.getElementById('mainContent');
         if (page === 'statistics') renderStatistics(content);
@@ -510,7 +503,6 @@
         else if (page === 'items') renderItems(content);
     }
 
-    // ========== СТАТИСТИКА ==========
     function renderStatistics(container) {
         const s = siteData.stats;
         container.innerHTML = `
@@ -525,7 +517,6 @@
         `;
     }
 
-    // ========== ПОЛЬЗОВАТЕЛИ ==========
     function renderUsers(container) {
         let html = `<div class="header-actions"><h3>👥 Все пользователи</h3></div><div class="table-container"><table><thead><tr><th>ID</th><th>Имя</th><th>Steam ID</th><th>Баланс</th><th>Всего пополнено</th><th>Всего выведено</th></tr></thead><tbody>`;
         siteData.users.forEach(user => {
@@ -574,14 +565,13 @@
         };
     }
 
-    // ========== ПРОМОКОДЫ ==========
     function renderPromocodes(container) {
         function buildTable() {
             let html = `<div class="header-actions"><button class="btn-primary" id="createPromoBtn">+ Создать промокод</button></div><div class="table-container"> <table><thead><tr><th>Название</th><th>Тип</th><th>Значение</th><th>Использований</th><th>Действует до</th><th>Действия</th></tr></thead><tbody>`;
             siteData.promocodes.forEach(p => {
                 html += `<tr><td>${p.name}</td><td>${p.type === 'balance' ? 'Баланс (+%)' : 'Кейс'}</td><td>${p.type === 'balance' ? p.value + '%' : p.value}</td><td>${p.uses}</td><td>${p.endDate || 'Без срока'}</td><td><button class="btn-danger delete-promo" data-id="${p.id}">🗑 Удалить</button></td></tr>`;
             });
-            html += `</tbody></table></div>`;
+            html += `</tbody>}</div>`;
             container.innerHTML = html;
             document.getElementById('createPromoBtn').onclick = showCreatePromoModal;
             document.querySelectorAll('.delete-promo').forEach(btn => {
@@ -614,7 +604,6 @@
         buildTable();
     }
 
-    // ========== КАТЕГОРИИ ==========
     function renderCategories(container) {
         function buildCategories() {
             let html = `<div class="header-actions"><button class="btn-primary" id="addCategoryBtn">+ Добавить категорию</button></div><div class="items-list">`;
@@ -653,7 +642,6 @@
         buildCategories();
     }
 
-    // ========== КЕЙСЫ ==========
     function renderCasesList(container) {
         function buildCases() {
             let html = `<div class="header-actions"><button class="btn-primary" id="addCaseBtn">+ Добавить кейс</button></div><div class="items-list">`;
@@ -716,34 +704,30 @@
         buildCases();
     }
 
-    // ========== ПРЕДМЕТЫ (НОВЫЙ РАЗДЕЛ) ==========
     function renderItems(container) {
         function buildItems() {
             let html = `<div class="header-actions"><button class="btn-primary" id="addItemBtn">+ Добавить предмет</button></div><div class="items-list">`;
-            
             if (siteData.items && siteData.items.length > 0) {
                 siteData.items.forEach(item => {
                     const rarityClass = getRarityClass(item.rarity);
                     html += `<div class="item-card" data-item-id="${item.id}">
                         <div class="item-info">
-                            <img src="${item.image}" class="item-preview-img" onerror="this.src='https://via.placeholder.com/60?text=?'">
+                            <img src="${item.image}" class="item-preview-img" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\' viewBox=\'0 0 24 24\' fill=\'%232dd4bf\'%3E%3Crect width=\'24\' height=\'24\' fill=\'%23111\'/%3E%3Ctext x=\'5\' y=\'16\' fill=\'white\'%3E🎁%3C/text%3E%3C/svg%3E'">
                             <div>
                                 <strong>${item.name}</strong><br>
                                 <span class="rarity-badge ${rarityClass}">${getRarityName(item.rarity)}</span>
                                 <span style="color:#fee7a0; margin-left:10px;">💰 ${item.price}₽</span>
                             </div>
                         </div>
-                        <button class="btn-danger delete-item" data-id="${item.id}">🗑 Удалить</button>
+                        <button class="delete-item-btn" data-id="${item.id}">🗑 Удалить</button>
                     </div>`;
                 });
             } else {
                 html += `<p style="text-align:center; padding:40px; color:#8ea1bd;">Нет добавленных предметов. Нажмите "+ Добавить предмет" чтобы начать.</p>`;
             }
-            
             html += `</div>`;
             container.innerHTML = html;
-            
-            document.querySelectorAll('.delete-item').forEach(btn => {
+            document.querySelectorAll('.delete-item-btn').forEach(btn => {
                 btn.onclick = (e) => {
                     e.stopPropagation();
                     const id = parseInt(btn.dataset.id);
@@ -754,17 +738,15 @@
                     }
                 };
             });
-            
-            const addBtn = document.getElementById('addItemBtn');
-            if (addBtn) addBtn.onclick = showAddItemModal;
+            document.getElementById('addItemBtn').onclick = showAddItemModal;
         }
-        
+
         function showAddItemModal() {
             const modal = document.createElement('div'); modal.className = 'modal-overlay active';
             modal.innerHTML = `
                 <div class="modal-container" style="max-width: 700px;">
                     <h3>➕ Добавить предмет из Steam</h3>
-                    <input type="text" id="steamLink" placeholder="Ссылка на торговую площадку Steam (например: https://steamcommunity.com/market/listings/730/AK-47%20%7C%20Frontside%20Misty)">
+                    <input type="text" id="steamLink" placeholder="Ссылка на торговую площадку Steam">
                     <div id="parseStatus" class="parse-loading"></div>
                     <div style="border-top: 1px solid rgba(45,212,191,0.3); margin: 10px 0; padding-top: 10px;">
                         <p style="font-size:0.8rem; color:#8ea1bd;">Или заполните вручную:</p>
@@ -788,16 +770,13 @@
                 </div>
             `;
             document.body.appendChild(modal);
-            
             const steamLinkInput = document.getElementById('steamLink');
             const parseStatus = document.getElementById('parseStatus');
             const itemNameInput = document.getElementById('itemName');
             const itemRaritySelect = document.getElementById('itemRarity');
             const itemImageInput = document.getElementById('itemImage');
             const itemPriceInput = document.getElementById('itemPrice');
-            
             let lastParseTimeout = null;
-            
             function parseSteamLink(link) {
                 if (!link || !link.includes('steamcommunity.com/market')) {
                     parseStatus.innerHTML = '';
@@ -805,7 +784,6 @@
                 }
                 parseStatus.innerHTML = '🔄 Анализ ссылки...';
                 parseStatus.style.color = '#2dd4bf';
-                
                 clearTimeout(lastParseTimeout);
                 lastParseTimeout = setTimeout(() => {
                     let match = link.match(/\/listings\/730\/(.+)$/);
@@ -815,21 +793,16 @@
                         extractedName = extractedName.replace(/\|/g, '|').trim();
                         extractedName = extractedName.replace(/%20/g, ' ');
                     }
-                    
                     if (extractedName) {
                         itemNameInput.value = extractedName;
                         parseStatus.innerHTML = '✅ Предмет найден! Название подставлено автоматически.';
-                        
                         const randomPrice = Math.floor(Math.random() * 5000) + 100;
                         itemPriceInput.value = randomPrice;
-                        
                         const imageId = Math.floor(Math.random() * 1000);
                         itemImageInput.value = `https://steamcommunity-a.akamaihd.net/economy/image/${imageId}/64fx64f`;
-                        
                         const rarities = ['consumer', 'industrial', 'mil-spec', 'restricted', 'classified', 'covert'];
                         const randomRarity = rarities[Math.floor(Math.random() * rarities.length)];
                         itemRaritySelect.value = randomRarity;
-                        
                         parseStatus.innerHTML += `<br>🎨 Редкость: ${getRarityName(randomRarity)}, 💰 Цена: ${randomPrice}₽`;
                     } else {
                         parseStatus.innerHTML = '⚠️ Не удалось определить название. Введите вручную.';
@@ -837,67 +810,44 @@
                     }
                 }, 800);
             }
-            
             steamLinkInput.oninput = () => parseSteamLink(steamLinkInput.value);
-            
             document.getElementById('cancelItemBtn').onclick = () => modal.remove();
             document.getElementById('saveItemBtn').onclick = () => {
                 const name = itemNameInput.value.trim();
                 const rarity = itemRaritySelect.value;
                 const image = itemImageInput.value.trim();
                 const price = parseInt(itemPriceInput.value);
-                
                 if (!name || !image || isNaN(price) || price <= 0) {
                     parseStatus.innerHTML = '⚠️ Заполните все поля корректно!';
                     parseStatus.style.color = '#ff6b6b';
                     return;
                 }
-                
                 if (!siteData.items) siteData.items = [];
-                siteData.items.push({
-                    id: Date.now(),
-                    name: name,
-                    rarity: rarity,
-                    image: image,
-                    price: price,
-                    steamLink: steamLinkInput.value.trim() || null
-                });
+                siteData.items.push({ id: Date.now(), name: name, rarity: rarity, image: image, price: price, steamLink: steamLinkInput.value.trim() || null });
                 saveData(siteData);
                 modal.remove();
                 buildItems();
             };
         }
-        
         buildItems();
     }
-    
+
     function getRarityClass(rarity) {
         const classes = {
-            'consumer': 'rarity-consumer',
-            'industrial': 'rarity-industrial',
-            'mil-spec': 'rarity-mil-spec',
-            'restricted': 'rarity-restricted',
-            'classified': 'rarity-classified',
-            'covert': 'rarity-covert',
-            'contraband': 'rarity-contraband'
+            'consumer': 'rarity-consumer', 'industrial': 'rarity-industrial', 'mil-spec': 'rarity-mil-spec',
+            'restricted': 'rarity-restricted', 'classified': 'rarity-classified', 'covert': 'rarity-covert', 'contraband': 'rarity-contraband'
         };
         return classes[rarity] || 'rarity-mil-spec';
     }
-    
+
     function getRarityName(rarity) {
         const names = {
-            'consumer': 'Потребительское',
-            'industrial': 'Армейское',
-            'mil-spec': 'Mil-Spec',
-            'restricted': 'Restricted',
-            'classified': 'Classified',
-            'covert': 'Covert',
-            'contraband': 'Contraband'
+            'consumer': 'Потребительское', 'industrial': 'Армейское', 'mil-spec': 'Mil-Spec',
+            'restricted': 'Restricted', 'classified': 'Classified', 'covert': 'Covert', 'contraband': 'Contraband'
         };
         return names[rarity] || 'Обычное';
     }
 
-    // ========== НАЗНАЧАЕМ ОБРАБОТЧИКИ НАВИГАЦИИ ==========
     document.querySelectorAll('.sidebar-subitem').forEach(el => {
         el.onclick = () => {
             document.querySelectorAll('.sidebar-subitem').forEach(item => item.classList.remove('active'));
@@ -905,14 +855,10 @@
             loadPage(el.getAttribute('data-page'));
         };
     });
-    
-    const statisticsBtn = document.getElementById('statisticsBtn');
-    if (statisticsBtn) {
-        statisticsBtn.onclick = () => {
-            document.querySelectorAll('.sidebar-subitem').forEach(item => item.classList.remove('active'));
-            loadPage('statistics');
-        };
-    }
+    document.getElementById('statisticsBtn').onclick = () => {
+        document.querySelectorAll('.sidebar-subitem').forEach(item => item.classList.remove('active'));
+        loadPage('statistics');
+    };
 </script>
 </body>
 </html>
