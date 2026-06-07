@@ -326,6 +326,7 @@
             font-weight: 800;
         }
 
+        /* Новая кнопка Сотрудничество */
         .partner-btn {
             background: linear-gradient(135deg, #2dd4bf, #1a7a6e);
             border: none;
@@ -516,7 +517,7 @@
                 </div>
                 <div class="user-area">
                     <div class="online-counter"><div class="online-dot"></div><span>Онлайн:</span><span class="online-count" id="onlineCount">0</span></div>
-                    <div class="balance-block"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 24 24' fill='%23F9A825'%3E%3Ccircle cx='12' cy='12' r='10' fill='%23FFD966'/%3E%3Ctext x='12' y='17' text-anchor='middle' fill='%238B5A2B' font-size='12'%3E$%3C/text%3E%3C/svg%3E" class="coin-icon"><span class="balance-amount">12,540</span></div>
+                    <div class="balance-block"><img src="img/oblic/money.png" class="coin-icon" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'34\' height=\'34\' viewBox=\'0 0 24 24\' fill=\'%23F9A825\'%3E%3Ccircle cx=\'12\' cy=\'12\' r=\'10\' fill=\'%23FFD966\'/%3E%3Ctext x=\'12\' y=\'17\' text-anchor=\'middle\' fill=\'%238B5A2B\' font-size=\'12\'%3E$%3C/text%3E%3C/svg%3E';"><span class="balance-amount">12,540</span></div>
                     <div class="steam-profile-btn" id="steamAuthBtn"><svg class="steam-icon" viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49l.2-.28c.43-.59.73-1.27.88-1.99l.28-1.2c-.56-.29-1.04-.68-1.42-1.15-.94-1.16-1.42-2.63-1.42-4.17 0-3.53 2.87-6.4 6.4-6.4s6.4 2.87 6.4 6.4c0 1.54-.48 3.01-1.42 4.17-.38.47-.86.86-1.42 1.15l.28 1.2c.15.72.45 1.4.88 1.99l.2.28C19.13 20.17 22 16.42 22 12c0-5.52-4.48-10-10-10z"/></svg><span>Steam</span></div>
                     <button class="partner-btn" id="partnerRedirectBtn">🤝 Сотрудничество</button>
                 </div>
@@ -549,52 +550,23 @@
 <div id="steamModal" class="steam-modal"><div class="steam-modal-content"><h3>⚡ Вход через Steam</h3><button id="realSteamLoginBtn" class="steam-login-btn">Войти через Steam</button><button class="close-modal" id="closeModalBtn">Закрыть</button></div></div>
 
 <script>
-    // Инициализация данных
-    if (!localStorage.getItem('skinsynth_data')) {
-        const defaultData = {
-            users: [
-                { id: 1, name: "Player_One", steamId: "76561198000000001", tradeLink: "https://steamcommunity.com/trade/1", balance: 1250, totalDeposit: 5000, totalWithdraw: 3750, cases: ["Открыл кейс 'Револьверный' - выиграл AK-47"], upgrades: ["Апгрейд M4A4 → M4A1-S"], market: ["Продал скин за 150 монет"], crash: ["Ставка 100 монет, множитель 2.5x"], bets: ["Ставка на NAVI - 200 монет"] },
-                { id: 2, name: "CS2_Pro", steamId: "76561198000000002", tradeLink: "https://steamcommunity.com/trade/2", balance: 3400, totalDeposit: 10000, totalWithdraw: 6600, cases: ["Открыл 'Золотой кейс' - выиграл нож"], upgrades: [], market: [], crash: [], bets: [] },
-                { id: 3, name: "SkinCollector", steamId: "76561198000000003", tradeLink: "https://steamcommunity.com/trade/3", balance: 890, totalDeposit: 2000, totalWithdraw: 1110, cases: [], upgrades: [], market: [], crash: [], bets: [] }
-            ],
-            promocodes: [
-                { id: 1, name: "WELCOME10", type: "balance", value: 10, uses: 145, endDate: "2026-12-31" },
-                { id: 2, name: "FREEBOX", type: "case", value: "Золотой кейс", uses: 32, endDate: "2026-10-15" }
-            ],
-            categories: [
-                { id: 1, name: "Фирменные кейсы", cases: ["Револьверный кейс", "Кейс «Спектр»", "Классический кейс"] },
-                { id: 2, name: "Раритетные кейсы", cases: ["Кейс «Прорыв»", "Кейс «Гамма»"] }
-            ],
-            cases: [
-                { id: 1, name: "Револьверный кейс", price: 29, category: "Фирменные кейсы", image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%232dd4bf'%3E%3Crect width='24' height='24' fill='%23111'/%3E%3Ctext x='5' y='16' fill='white'%3E🎁%3C/text%3E%3C/svg%3E", items: ["AK-47 | Фронтовик", "M4A4 | Зенит", "AWP | Паучиха"] },
-                { id: 2, name: "Золотой кейс", price: 659, category: "Фирменные кейсы", image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%232dd4bf'%3E%3Crect width='24' height='24' fill='%23111'/%3E%3Ctext x='5' y='16' fill='white'%3E🎁%3C/text%3E%3C/svg%3E", items: ["Нож-бабочка", "Голубая сталь", "Рубиновый нож"] }
-            ],
-            items: [
-                { id: 1, name: "AK-47 | Фронтовик", rarity: "classified", image: "https://community.cloudflare.steamstatic.com/economy/image/class/730/1", price: 1250, steamLink: "https://steamcommunity.com/market/listings/730/AK-47%20%7C%20Frontside%20Misty" },
-                { id: 2, name: "AWP | Паучиха", rarity: "covert", image: "https://community.cloudflare.steamstatic.com/economy/image/class/730/2", price: 4200, steamLink: "https://steamcommunity.com/market/listings/730/AWP%20%7C%20Gungnir" }
-            ],
-            stats: {
-                totalDeposit: { today: 12500, week: 87400, month: 342000 },
-                totalWithdraw: { today: 8300, week: 62100, month: 256000 },
-                lastDeposit: { user: "Player_One", amount: 500, date: "2026-06-07 14:23" },
-                lastWithdraw: { user: "CS2_Pro", amount: 1200, date: "2026-06-06 19:45" }
-            }
-        };
-        localStorage.setItem('skinsynth_data', JSON.stringify(defaultData));
-    }
-
+    // Загрузка данных из localStorage
     function loadSiteData() {
-        return JSON.parse(localStorage.getItem('skinsynth_data'));
+        const data = localStorage.getItem('skinsynth_data');
+        if (data) return JSON.parse(data);
+        return null;
     }
 
     let siteData = loadSiteData();
 
     function getCasesFromData() {
-        return siteData && siteData.cases ? siteData.cases : [];
+        if (siteData && siteData.cases) return siteData.cases;
+        return [];
     }
 
     function getCategoriesFromData() {
-        return siteData && siteData.categories ? siteData.categories : [];
+        if (siteData && siteData.categories) return siteData.categories;
+        return [];
     }
 
     function renderCases() {
@@ -617,7 +589,7 @@
             const grid = section.querySelector('.cases-grid');
             catCases.forEach(cs => {
                 const card = document.createElement('div'); card.className = 'case-card';
-                card.innerHTML = `<div class="img-wrapper"><img class="case-img" src="${cs.image}" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22100%22%20height=%22100%22%20viewBox=%220%200%2024%2024%22%20fill=%22%232dd4bf%22%3E%3Crect%20width=%2224%22%20height=%2224%22%20fill=%22%23111%22/%3E%3Ctext%20x=%225%22%20y=%2216%22%20fill=%22white%22%3E🎁%3C/text%3E%3C/svg%3E'"></div><div class="case-info"><div class="case-name">${cs.name}</div><div class="case-price"><img class="price-coin" src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2226%22%20height=%2226%22%20viewBox=%220%200%2024%2024%22%20fill=%22%23F9A825%22%3E%3Ccircle%20cx=%2212%22%20cy=%2212%22%20r=%2210%22%20fill=%22%23FFD966%22/%3E%3Ctext%20x=%2212%22%20y=%2217%22%20text-anchor=%22middle%22%20fill=%22%238B5A2B%22%3E$%3C/text%3E%3C/svg%3E'"><span class="price-value">${cs.price}</span></div></div>`;
+                card.innerHTML = `<div class="img-wrapper"><img class="case-img" src="${cs.image}" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22100%22%20height=%22100%22%20viewBox=%220%200%2024%2024%22%20fill=%22%232dd4bf%22%3E%3Crect%20width=%2224%22%20height=%2224%22%20fill=%22%23111%22/%3E%3Ctext%20x=%225%22%20y=%2216%22%20fill=%22white%22%3E🎁%3C/text%3E%3C/svg%3E'"></div><div class="case-info"><div class="case-name">${cs.name}</div><div class="case-price"><img class="price-coin" src="img/oblic/money.png" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2226%22%20height=%2226%22%20viewBox=%220%200%2024%2024%22%20fill=%22%23F9A825%22%3E%3Ccircle%20cx=%2212%22%20cy=%2212%22%20r=%2210%22%20fill=%22%23FFD966%22/%3E%3Ctext%20x=%2212%22%20y=%2217%22%20text-anchor=%22middle%22%20fill=%22%238B5A2B%22%3E$%3C/text%3E%3C/svg%3E';"><span class="price-value">${cs.price}</span></div></div>`;
                 card.addEventListener('click', () => showNotification(`🔑 ${cs.name} — ${cs.price} монет`));
                 grid.appendChild(card);
             });
@@ -658,15 +630,21 @@
         });
     });
 
-    document.getElementById('partnerRedirectBtn')?.addEventListener('click', () => {
-        window.location.href = 'admin.html';
-    });
+    // Кнопка "Сотрудничество" - ведёт на админ-панель
+    const partnerRedirectBtn = document.getElementById('partnerRedirectBtn');
+    if (partnerRedirectBtn) {
+        partnerRedirectBtn.addEventListener('click', () => {
+            window.location.href = 'admin.html';
+        });
+    }
 
+    // Партнерская программа (открывается в новом окне)
     document.getElementById('partnerProgramLink')?.addEventListener('click', (e) => {
         e.preventDefault();
         window.open('https://example.com/register', '_blank');
     });
 
+    // Модалки
     const termsModal = document.getElementById('termsModal');
     const privacyModal = document.getElementById('privacyModal');
     const corpInfoModal = document.getElementById('corpInfoModal');
