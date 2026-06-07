@@ -4,10 +4,499 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>SkinSynth | Кейсы, Маркет, Партнерская программа</title>
-    <!-- Google Fonts & Chart.js -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0c0f15 0%, #06080c 100%);
+            font-family: 'Inter', sans-serif;
+            color: #eef2ff;
+            line-height: 1.4;
+            overflow-x: hidden;
+        }
+
+        .glow {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at 70% 20%, rgba(45, 212, 191, 0.1), transparent 70%);
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header {
+            backdrop-filter: blur(12px);
+            background: rgba(10, 14, 23, 0.85);
+            border-bottom: 1px solid rgba(66, 200, 200, 0.25);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+        }
+
+        .nav-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 16px 0;
+            gap: 16px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #E0F2FE, #2dd4bf, #7aa2f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            flex-shrink: 0;
+        }
+
+        .nav-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            flex: 1;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            background: rgba(20, 28, 38, 0.6);
+            padding: 8px 20px;
+            border-radius: 60px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(80, 140, 150, 0.3);
+        }
+
+        .nav-link {
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #b9c7d9;
+            padding: 6px 14px;
+            border-radius: 40px;
+            white-space: nowrap;
+        }
+
+        .nav-link.active {
+            background: rgba(45, 212, 191, 0.2);
+            color: #2dd4bf;
+            text-shadow: 0 0 6px rgba(45,212,191,0.3);
+        }
+
+        .nav-link:hover:not(.active) {
+            color: #ffffff;
+            background: rgba(255,255,245,0.05);
+        }
+
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-left: auto;
+        }
+
+        .balance-block {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(20, 28, 38, 0.9);
+            padding: 6px 18px;
+            border-radius: 60px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(45,212,191,0.3);
+        }
+
+        .coin-icon {
+            width: 34px;
+            height: 34px;
+            object-fit: contain;
+        }
+
+        .balance-amount {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fee7a0;
+        }
+
+        .steam-profile-btn {
+            background: #1a283b;
+            border: 1px solid #2c6e9e;
+            border-radius: 16px;
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #c3e2fc;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .steam-profile-btn:hover {
+            background: #244160;
+            border-color: #5faee3;
+            color: white;
+            transform: scale(0.97);
+        }
+
+        .steam-icon {
+            width: 20px;
+            height: 20px;
+            filter: brightness(0) invert(1);
+        }
+
+        .online-counter {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(20, 28, 38, 0.8);
+            padding: 6px 14px;
+            border-radius: 60px;
+            border: 1px solid rgba(45,212,191,0.4);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .online-dot {
+            width: 10px;
+            height: 10px;
+            background: #2dd4bf;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #2dd4bf;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.4; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+        .online-count {
+            color: #2dd4bf;
+            font-weight: 700;
+        }
+
+        .hero {
+            margin: 45px 0 30px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(145deg, #FFFFFF, #9ac7e7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            color: #8ea1bd;
+            margin-top: 12px;
+            font-size: 1rem;
+        }
+
+        .category-divider {
+            margin: 50px 0 25px 0;
+            position: relative;
+        }
+
+        .category-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #7dd3fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            text-align: center;
+        }
+
+        .category-title .icon {
+            font-size: 2rem;
+            background: none;
+            -webkit-background-clip: unset;
+            background-clip: unset;
+            color: #2dd4bf;
+        }
+
+        .category-divider hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #2dd4bf, #2dd4bf, transparent);
+            margin: 16px 0 0 0;
+            opacity: 0.5;
+        }
+
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 34px;
+            margin: 30px 0 20px 0;
+        }
+
+        .case-card {
+            background: rgba(18, 24, 34, 0.5);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            overflow: hidden;
+            transition: transform 0.25s ease, box-shadow 0.3s, background 0.2s;
+            cursor: pointer;
+        }
+        .case-card:hover {
+            transform: translateY(-6px);
+            background: rgba(25, 32, 44, 0.7);
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.5);
+        }
+        .img-wrapper {
+            background: rgba(8, 12, 20, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 220px;
+            padding: 28px;
+        }
+        .case-img {
+            max-width: 100%;
+            max-height: 160px;
+            object-fit: contain;
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.5));
+            transition: transform 0.2s;
+        }
+        .case-card:hover .case-img {
+            transform: scale(1.03);
+        }
+        .case-info {
+            padding: 12px 20px 26px;
+            text-align: center;
+        }
+        .case-name {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff, #b7e0ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .case-price {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #151e2c;
+            padding: 8px 20px;
+            border-radius: 60px;
+            margin-top: 12px;
+        }
+        .price-coin {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+        .price-value {
+            color: #fee7a0;
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+
+        .partner-btn {
+            background: linear-gradient(135deg, #2dd4bf, #1a7a6e);
+            border: none;
+            border-radius: 16px;
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: white;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .partner-btn:hover {
+            transform: scale(0.97);
+            background: linear-gradient(135deg, #1a7a6e, #0f5a50);
+            box-shadow: 0 0 15px rgba(45,212,191,0.4);
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding: 40px 0 30px;
+            border-top: 1px solid rgba(80,140,150,0.2);
+            background: rgba(6, 8, 12, 0.6);
+            backdrop-filter: blur(8px);
+        }
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        .footer-brand { flex: 1; min-width: 200px; }
+        .footer-brand h3 {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #E0F2FE, #2dd4bf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+        .footer-brand .copyright { color: rgba(142, 161, 189, 0.6); font-size: 0.85rem; margin-top: 8px; }
+        .footer-links { flex: 2; display: flex; flex-wrap: wrap; gap: 40px; justify-content: flex-end; }
+        .footer-col { min-width: 140px; }
+        .footer-col h4 { color: #7dd3fc; font-size: 0.9rem; font-weight: 600; margin-bottom: 12px; }
+        .footer-col a, .footer-col span { display: block; color: rgba(142, 161, 189, 0.7); font-size: 0.8rem; margin-bottom: 8px; cursor: pointer; }
+        .footer-col a:hover { color: #2dd4bf; }
+        .social-icons { display: flex; gap: 15px; margin-top: 8px; }
+        .social-icon {
+            width: 32px; height: 32px;
+            background: rgba(45,212,191,0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #7dd3fc;
+        }
+        .social-icon:hover { background: rgba(45,212,191,0.4); transform: translateY(-2px); }
+        @media (max-width: 780px) {
+            .nav-links { gap: 4px; padding: 6px 12px; flex-wrap: wrap; justify-content: center; }
+            .nav-link { font-size: 0.7rem; padding: 4px 8px; }
+            .hero h1 { font-size: 2rem; }
+            .cases-grid { gap: 20px; }
+            .img-wrapper { height: 190px; }
+            .steam-profile-btn span { display: none; }
+            .partner-btn span { display: none; }
+            .coin-icon { width: 28px; height: 28px; }
+            .price-coin { width: 26px; height: 26px; }
+            .footer-content { flex-direction: column; gap: 25px; }
+            .online-counter span:not(.online-count) { display: none; }
+        }
+        .toast-msg {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #1e2a3aee;
+            backdrop-filter: blur(12px);
+            border-left: 5px solid #2dd4bf;
+            padding: 12px 24px;
+            border-radius: 20px;
+            font-weight: 500;
+            color: #fff;
+            z-index: 200;
+            animation: fadeSlide 0.25s ease;
+        }
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(14px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1100;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+        }
+        .modal-overlay.active { visibility: visible; opacity: 1; }
+        .modal-container {
+            background: linear-gradient(145deg, #11161f, #0a0e16);
+            border-radius: 36px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 28px 32px;
+            border: 1px solid rgba(45,212,191,0.5);
+        }
+        .modal-container h2 {
+            font-size: 1.9rem;
+            background: linear-gradient(135deg, #fff, #7dd3fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 22px;
+            border-left: 4px solid #2dd4bf;
+            padding-left: 18px;
+        }
+        .modal-container p { font-size: 0.9rem; line-height: 1.5; color: #cad2e3; margin-bottom: 8px; }
+        .modal-close-btn { display: flex; justify-content: flex-end; margin-top: 20px; }
+        .modal-close-btn button {
+            background: rgba(45,212,191,0.2);
+            border: 1px solid #2dd4bf;
+            padding: 8px 28px;
+            border-radius: 40px;
+            color: #2dd4bf;
+            cursor: pointer;
+        }
+        .steam-modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+        }
+        .steam-modal.active { visibility: visible; opacity: 1; }
+        .steam-modal-content {
+            background: linear-gradient(145deg, #151e2c, #0b1018);
+            border-radius: 32px;
+            max-width: 380px;
+            width: 90%;
+            padding: 32px 24px;
+            text-align: center;
+            border: 1px solid rgba(45,212,191,0.5);
+        }
+        .steam-login-btn {
+            background: #1b2838;
+            border-radius: 40px;
+            padding: 14px 28px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid #66c0f4;
+        }
+        .corp-link { color: #2dd4bf; cursor: pointer; }
+        .email-highlight { color: #2dd4bf; font-weight: 600; }
+    </style>
 </head>
 <body>
 <div class="glow"></div>
@@ -25,8 +514,12 @@
                 </div>
                 <div class="user-area">
                     <div class="online-counter"><div class="online-dot"></div><span>Онлайн:</span><span class="online-count" id="onlineCount">0</span></div>
-                    <div class="balance-block"><img src="img/oblic/money.png" class="coin-icon" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'34\' height=\'34\' viewBox=\'0 0 24 24\' fill=\'%23F9A825\'%3E%3Ccircle cx=\'12\' cy=\'12\' r=\'10\' fill=\'%23FFD966\'/%3E%3Ctext x=\'12\' y=\'17\' text-anchor=\'middle\' fill=\'%238B5A2B\' font-size=\'12\'%3E$%3C/text%3E%3C/svg%3E';"><span class="balance-amount">12,540</span></div>
+                    <div class="balance-block">
+                        <div class="coin-icon" style="width:34px;height:34px;background:#2dd4bf20;border-radius:50%;display:flex;align-items:center;justify-content:center;">💰</div>
+                        <span class="balance-amount">12,540</span>
+                    </div>
                     <div class="steam-profile-btn" id="steamAuthBtn"><svg class="steam-icon" viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49l.2-.28c.43-.59.73-1.27.88-1.99l.28-1.2c-.56-.29-1.04-.68-1.42-1.15-.94-1.16-1.42-2.63-1.42-4.17 0-3.53 2.87-6.4 6.4-6.4s6.4 2.87 6.4 6.4c0 1.54-.48 3.01-1.42 4.17-.38.47-.86.86-1.42 1.15l.28 1.2c.15.72.45 1.4.88 1.99l.2.28C19.13 20.17 22 16.42 22 12c0-5.52-4.48-10-10-10z"/></svg><span>Steam</span></div>
+                    <button class="partner-btn" id="partnerRedirectBtn">🤝 Сотрудничество</button>
                 </div>
             </div>
         </div>
@@ -49,45 +542,117 @@
     </div>
 </footer>
 
-<!-- Модальное окно: Корпоративная информация (Контакты) -->
-<div id="corpInfoModal" class="modal-overlay"><div class="modal-container"><h2>SkinSynth КОРПОРАТИВНАЯ ИНФОРМАЦИЯ</h2><div class="corp-info-block"><p>Перед использованием сайта просьба ознакомиться с:</p><p><strong>1.1</strong> <a class="corp-link" id="corpTermsLink">Пользовательское соглашение</a></p><p><strong>1.2</strong> <a class="corp-link" id="corpPrivacyLink">Политика конфиденциальности</a></p><p><strong>1.3</strong> <a class="corp-link" id="corpCookiesLink">Политика cookies</a></p></div><div class="corp-info-block"><p><strong>Остались вопросы?</strong></p><p><strong>2.1</strong> Ознакомьтесь с FAQ</p><p><strong>2.2</strong> Там собраны наиболее популярные ответы на часто задаваемые вопросы.</p><p><strong>2.3</strong> Или напишите нам на <span class="email-highlight">kirielgroup@gmail.com</span></p></div><div class="modal-close-btn"><button id="closeCorpInfoBtn">Закрыть</button></div></div></div>
-
-<!-- ПОЛНОЕ Модальное окно: Пользовательское соглашение (ВСЕ РАЗДЕЛЫ I-X) -->
-<div id="termsModal" class="modal-overlay"><div class="modal-container"><h2>УСЛОВИЯ ИСПОЛЬЗОВАНИЯ</h2><h3>I. ОПРЕДЕЛЕНИЯ</h3><p><strong>1.1</strong> Поставщик услуг – означает компанию SkinSynth.IO.</p><p><strong>1.2</strong> Сайт (Сайт) – сайт, доступный в сети Интернет по адресу https://dinodrop.io.</p><p><strong>1.3</strong> Условия – означают настоящие условия.</p><p><strong>1.4</strong> Пользователь — означает любое лицо в возрасте 18 лет или старше, обладающее полной дееспособностью и соглашающееся подчиняться настоящим Условиям.</p><p><strong>1.5</strong> Услуга – услуга, предоставляемая Поставщиком услуг Пользователю в электронной форме через Сайт.</p><p><strong>1.6</strong> PLN, USD, EUR, RUB, UAH, GOLD COIN, EVENT COIN, DD, DD-COIN - означает универсальные ваучеры, которые можно обменять на различные услуги на Сайте, особенно на услугу, позволяющую получать товары из кейса.</p><h3>II. ОБЩЕЕ</h3><p><strong>2.1</strong> Ни одно лицо в возрасте до восемнадцати (18) лет не может использовать Сервис, независимо от какого-либо согласия вашего родителя или опекуна на использование Сервиса.</p><p><strong>2.2</strong> Незнание настоящих Условий использования не освобождает вас от обязанности их соблюдать.</p><p><strong>2.3</strong> Для доступа к Сервису вам необходим поддерживаемый веб-браузер. Вы признаете и соглашаетесь с тем, что Сайт может прекратить поддержку определенного веб-браузера и что для дальнейшего использования вами Сервиса вам потребуется загрузить поддерживаемый веб-браузер. Вы также признаете и соглашаетесь с тем, что качество обслуживания зависит от производительности вашего компьютерного оборудования и вашего подключения к Интернету.</p><p><strong>2.4</strong> Вы соглашаетесь войти в систему и зарегистрироваться для использования Услуг через свою учетную запись Steam, предоставленную корпорацией Valve.</p><p><strong>2.5</strong> Вы несете единоличную ответственность за управление своей учетной записью и паролем, а также за сохранение конфиденциальности вашего пароля. Вы также несете единоличную ответственность за ограничение доступа к вашей учетной записи.</p><p><strong>2.6</strong> Вы соглашаетесь с тем, что несете ответственность за все действия, которые происходят с вашей учетной записью или в результате использования вашего пароля вами или другими лицами. Если вы считаете, что третье лицо получило доступ к вашему паролю, как можно скорее воспользуйтесь функцией восстановления пароля Сервиса, чтобы получить новый пароль. При любых обстоятельствах вы соглашаетесь не разрешать третьим лицам использовать Сервис или получать к нему доступ.</p><p><strong>2.7</strong> Вы признаете и признаете, что несете единоличную ответственность за понимание и соблюдение любых законов и правил, применимых в стране вашего проживания к использованию вами Услуг и доступу к этому Веб-сайту. Администрация Сайта не несет ответственности за любые убытки, возникшие в результате использования Сайта.</p><p><strong>2.8</strong> В случае умышленного использования эксполита страницы такие выигрыши не подлежат выплате и баланс пользователя будет восстановлен в исходное состояние. Такая ситуация ни в коем случае не станет предметом обжалования.</p><p><strong>2.9</strong> SkinSynth придерживается строгой политики против потенциального мошенничества и разработки стратегий получения несправедливых выгод. На сайте разрешена только одна учетная запись на человека. Использование более чем одной учетной записи одним Пользователем строго запрещено и может привести к постоянной блокировке вашей учетной записи и всех связанных с ней учетных записей.</p><h3>III. ПОКУПКИ И ЦЕНЫ</h3><p><strong>3.1</strong> Все покупки совершаются в отношении цифровых/виртуальных (нематериальных) предметов. Мы не несем ответственности за любые случайные или несанкционированные транзакции.</p><p><strong>3.2</strong> Мы оставляем за собой право изменить, с уведомлением или без него, любую заявленную цену товара. Мы также оставляем за собой право лишить пользователей льгот в крайних случаях, когда это будет сочтено необходимым. В случае, если вы заплатили за товар и произошло такое изменение, деньги вам не будут возвращены.</p><h3>IV. ТОВАРНЫЕ ЗНАКИ</h3><p><strong>4.1</strong> Все товарные знаки и знаки обслуживания SkinSynth на Сайте являются товарными знаками SkinSynth.</p><h3>V. КЕЙС</h3><p><strong>5.1</strong> Открывая кейс, вы соглашаетесь принять полученный товар. Предметы, содержащиеся в кейсе, генерируются случайным образом.</p><p><strong>5.2</strong> Настоящим вы соглашаетесь с тем, что цена кейса, включая содержащийся в нем Предмет, соответствует вашим ожиданиям, и подтверждаете, что вы не имеете права требовать какой-либо дополнительной компенсации от SkinSynth.</p><h3>VI. ВОЗМЕЩЕНИЕ</h3><p>Вы ясно понимаете и соглашаетесь с тем, что мы не несем ответственности за любые прямые, косвенные, особые, случайные, или примерные убытки, включая, помимо прочего, убытки, связанные с упущенной выгодой, деловой репутацией, использованием, данными или другими материальными/нематериальными потерями (даже если нас уведомили о возможности такого ущерба), возникшего в результате: (I) Использование или невозможность использования услуги; (II) Затраты на получение товаров-заменителей и/или услуг, возникающих в результате любой транзакции, заключенной в рамках услуги; (III) Несанкционированный доступ или изменение передаваемых вами данных; (IV) Заявления или поведение любой третьей стороны на сервисе, или (V) любой другой вопрос, касающийся услуги.</p><h3>VII. НИКАКИХ ГАРАНТИЙ</h3><p><strong>7.1</strong> Этот веб-сайт предоставляется «как есть», без каких-либо заявлений или гарантий, явных или подразумеваемых. SkinSynth не делает никаких заявлений и не дает никаких гарантий в отношении данного Сайта или информации и материалов, представленных на Сайте. Без ущерба для общего характера предыдущего параграфа SkinSynth не гарантирует, что Сайт будет постоянно доступен или доступен вообще; или информация на этом веб-сайте является полной, правдивой, точной или не вводящей в заблуждение.</p><p><strong>7.2</strong> Ничто на этом веб-сайте не представляет собой и не предназначено для того, чтобы представлять собой какой-либо совет. Если вам требуется консультация по любому юридическому, финансовому или медицинскому вопросу, вам следует проконсультироваться с соответствующим специалистом.</p><p><strong>7.3</strong> Вы соглашаетесь с тем, что используете веб-сайт по своему усмотрению, по своему желанию и на свой страх и риск.</p><h3>VIII. ВОЗВРАТ</h3><p><strong>8.1</strong> Все продажи являются окончательными и не подлежат возврату. Вы не имеете права выкупать, останавливать, зачислять любыми способами, необходимыми для получения обратно тех средств, которые были выплачены SkinSynth. При этом мы оставляем за собой право не допускать добавления или удаления дополнительных средств.</p><p><strong>8.2</strong> Мы не осуществляем возврат средств за цифровые продукты после подтверждения заказа и отправки продукта. Мы рекомендуем обращаться к нам за помощью, если у вас возникнут проблемы с получением или загрузкой наших продуктов.</p><p><strong>8.3</strong> Мы оставляем за собой право возбудить любые юридические или коллекторские действия, необходимые для возмещения убытков в случае принудительного возврата средств.</p><h3>IX. КОШЕЛЕК</h3><p><strong>9.1</strong> Пополняя сумму на свой кошелек SkinSynth, вы соглашаетесь с тем, что полученные кредиты (обозначенные аббревиатурой PLN, USD, EUR, RUB, UAH, GOLD COIN, EVENT COIN, DD, DD-COIN) не стоят реальных денег и не подлежат возврату при условии любого возмещения.</p><h3>X. ССЫЛКИ НА ДРУГИЕ ВЕБ-САЙТЫ</h3><p><strong>10.1</strong> Наш Сервис может содержать ссылки на сторонние веб-сайты или сервисы, которые не принадлежат и не контролируются SkinSynth.</p><p><strong>10.2</strong> SkinSynth не контролирует и не несет ответственности за содержимое, политику конфиденциальности или действия любых сторонних веб-сайтов или служб. Вы также признаете и соглашаетесь с тем, что SkinSynth не несет ответственности, прямо или косвенно, за любой ущерб или убытки, вызванные или предположительно вызванные в результате или в связи с использованием любого такого контента, товаров или услуг, доступных на или через него, и любые такие веб-сайты или службы.</p><p><strong>10.3</strong> Мы настоятельно рекомендуем вам ознакомиться с условиями и политикой конфиденциальности любых сторонних веб-сайтов или служб, которые вы посещаете.</p><div class="modal-close-btn"><button id="closeTermsBtn">Закрыть</button></div></div></div>
-
-<!-- ПОЛНОЕ Модальное окно: Политика конфиденциальности -->
-<div id="privacyModal" class="modal-overlay"><div class="modal-container"><h2>ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ</h2><p>Данная страница информирует вас о нашей политике сбора, использования и раскрытия личной информации, которую мы получаем от пользователей сайта. Ваша личная информация используется для улучшения сайта. Используя Сайт, вы соглашаетесь на сбор и использование информации в соответствии с данной политикой.</p><h3>СБОР И ИСПОЛЬЗОВАНИЕ ИНФОРМАЦИИ</h3><p>При использовании нашего сайта мы можем попросить вас предоставить нам определенную личную информацию, которая может быть использована для связи или идентификации вас. Лично идентифицируемая информация может включать, но не ограничиваться вашим именем ("Личная информация"). Информация, которую мы запрашиваем, может быть связана с контактной информацией, а также демографической информацией. Мы будем использовать вашу личную информацию в наших законных интересах для ответа на ваши запросы, для отправки вам информации, для выполнения каких-либо договорных обязательств перед вами, в исследовательских целях, для отправки вам маркетинговой информации о наших товарах, услугах и связанных с ними возможностях, а также в других разумных целях на основании вашего утвердительного согласия. Также мы собираем информацию, которую ваш браузер отправляет при каждом посещении нашего Сайта ("Данные журнала"). Данный журнал собирает административную информацию, адрес интернет-протокола ("IP") вашего компьютера, тип браузера, версия браузера, страницы нашего Сайта, которые вы посещаете, время и дата вашего посещения, время, проведенное на этих страницах, и другие статистические данные. Мы периодически проверяем собранную нами Личную информацию, чтобы определить ее точность и возможность ее удаления. Хотим вас проинформировать, что в некоторых случаях мы можем проводить исследования безопасности с целью подтверждения вашей личности, возраста, а также других регистрационных данных, предоставленных вами, и проверки использования вами Веб-сайта и ваших финансовых операций, чтобы убедиться в отсутствии потенциального нарушения Наших положений и условий и/или законодательства Соединенного Королевства Великобритании и Северной Ирландии.</p><h3>COOKIES</h3><p>Cookies - это файлы с небольшим объемом данных, которые могут включать анонимный уникальный идентификатор. Cookies отправляются в ваш браузер с веб-сайта и хранятся на жестком диске вашего компьютера. Как и многие сайты, мы используем "cookies" для сбора такой информации, как: 1) запоминание входа на сайт 2) запоминание ваших предпочтений по отображению страниц. Вы можете настроить свой браузер так, чтобы он отказывался от всех "cookies" или указывал, когда отправляются "cookies". Однако, если вы не принимаете файлы cookie, вы не сможете пользоваться некоторыми разделами нашего Сайта. Информацию о том, как это сделать, можно найти в файлах справки вашего веб-браузера.</p><h3>ЗАЩИТА ИНФОРМАЦИИ</h3><p>Безопасность вашей личной информации очень важна для нас, но помните, что ни один способ передачи через Интернет или электронный способ хранения данных не гарантирует полной безопасности. Хотя мы стремимся использовать коммерчески приемлемые средства для защиты вашей Личной информации, мы не можем гарантировать ее абсолютную безопасность.</p><h3>ВАШИ ПРАВА</h3><p>У вас есть права в отношении вашей персональной информации: Право на получение информации о том, как мы обрабатываем ваши данные, а также дополнительно копию ваших персональных данных; Право на исправление информации о вас, имеющейся в нашем распоряжении, если данная информация противоречит действительности; Право на доступ и изучение вашей личной информации, которая находится в нашем распоряжении; Право на удаление, ограничение или "приостановку" использования вашей Персональной информации (в исключительных случаях).</p><h3>СОГЛАСИЕ НА ОБРАБОТКУ ДАННЫХ</h3><p>Согласие на обработку данных должно быть дано в позитивной и утвердительной форме физическими лицами, которые предоставляют свои персональные данные организациям. После предоставления ваших персональных данных на нашем сайте вы должны принять условия и положения соглашения. Ваши персональные данные не будут раскрываться третьим лицам, за исключением случаев, когда такое раскрытие необходимо для обработки ваших запросов, проведения процедур верификации или если это требуется по закону. Что касается маркетинговой информации и сообщений, вы оставляете за собой право отказаться от получения таких сообщений. Также вы вправе отказаться от маркетинга в любое время, если вы не заинтересованы в получении наших маркетинговых информационных сообщений.</p><h3>БЕЗОПАСНОСТЬ</h3><p>Просим обратить ваше внимание, что наша компания полностью осознает важность информационной безопасности и методов, необходимых для защиты информации. Мы храним всю полученную от вас Личную информацию в защищенной базе данных в нашей защищенной сети и под активным ведущим программным обеспечением безопасности.</p><h3>КОНТАКТЫ</h3><p>Если вы хотите обновить или удалить ваши личные данные, а также если у вас есть вопросы по поводу данной политики конфиденциальности или того как мы обрабатываем вашу личную информацию, пожалуйста, свяжитесь с нами по электронной почте: kirielgroup@gmail.com</p><div class="modal-close-btn"><button id="closePrivacyBtn">Закрыть</button></div></div></div>
-
-<!-- Модальное окно: Cookies (ПОЛНАЯ ПОЛИТИКА) -->
-<div id="cookiesModal" class="modal-overlay"><div class="modal-container"><h2>Политика Cookie</h2><h3>1. Определения и ключевые термины</h3><p><strong>1.1</strong> Cookie-файлы: небольшое количество данных, генерируемых веб-сайтом и сохраненных в веб-браузере. Используется для идентификации браузера, аналитики, запоминания языковых предпочтений или логина.</p><p><strong>1.2</strong> Компания: SkinSynth.</p><p><strong>1.3</strong> Устройство: телефон, планшет, компьютер.</p><p><strong>1.4</strong> Персональные данные: информация, позволяющая идентифицировать физическое лицо.</p><p><strong>1.5</strong> Услуга: относится к услуге, предоставляемой SkinSynth.</p><p><strong>1.6</strong> Сторонний сервис: рекламодатели, партнеры.</p><p><strong>1.7</strong> Веб-сайт: https://dinodrop.io/</p><h3>2. Введение</h3><p>Эта Политика Cookie объясняет использование файлов cookie на сайте.</p><h3>3. Что такое cookie?</h3><p>Cookie - небольшой текстовый файл, который хранится на вашем устройстве. Они безопасны.</p><h3>4. Почему мы используем файлы cookie?</h3><p>Для облегчения работы сайта, улучшения опыта, аналитики, персонализации маркетинга.</p><h3>5. Какие файлы cookie использует SkinSynth?</h3><p>Сессионные и постоянные. Строго необходимые, функциональные, маркетинговые, аналитические.</p><h3>6. Типы файлов cookie</h3><p><strong>Essential Cookies:</strong> необходимы для работы сайта.<br><strong>Performance Cookies:</strong> повышают производительность.<br><strong>Marketing Cookies:</strong> для персонализации маркетинга.<br><strong>Analytics Cookies:</strong> Google Analytics. Отказ: https://tools.google.com/dlpage/gaoptout.<br><strong>Social Media Cookies:</strong> для кнопок "Поделиться".<br><strong>Third Party Cookies:</strong> устанавливаются сторонними сервисами.</p><h3>7. Как управлять куки?</h3><p>Инструкции для браузеров: Google Chrome, Edge, Firefox, Safari, Opera.</p><h3>8. Блокировка и отключение</h3><p>Вы можете настроить браузер на блокировку cookie, но это может повлиять на функциональность сайта.</p><h3>9. Изменения в политике</h3><p>Мы можем обновлять политику. При продолжении использования сервиса вы принимаете изменения.</p><h3>10. Ваше согласие</h3><p>Используя сайт, вы соглашаетесь с Политикой Cookie.</p><h3>11. Связаться с нами</h3><p>Email: kirielgroup@gmail.com</p><div class="modal-close-btn"><button id="closeCookiesBtn">Закрыть</button></div></div></div>
-
+<!-- Модальные окна -->
+<div id="corpInfoModal" class="modal-overlay"><div class="modal-container"><h2>SkinSynth КОРПОРАТИВНАЯ ИНФОРМАЦИЯ</h2><p>Перед использованием сайта просьба ознакомиться с:</p><p><strong>1.1</strong> <a class="corp-link" id="corpTermsLink">Пользовательское соглашение</a></p><p><strong>1.2</strong> <a class="corp-link" id="corpPrivacyLink">Политика конфиденциальности</a></p><p><strong>1.3</strong> <a class="corp-link" id="corpCookiesLink">Политика cookies</a></p><p><strong>Остались вопросы?</strong></p><p><strong>2.3</strong> Напишите нам на <span class="email-highlight">kirielgroup@gmail.com</span></p><div class="modal-close-btn"><button id="closeCorpInfoBtn">Закрыть</button></div></div></div>
+<div id="termsModal" class="modal-overlay"><div class="modal-container"><h2>Пользовательское соглашение</h2><p>Полный текст пользовательского соглашения...</p><div class="modal-close-btn"><button id="closeTermsBtn">Закрыть</button></div></div></div>
+<div id="privacyModal" class="modal-overlay"><div class="modal-container"><h2>Политика конфиденциальности</h2><p>Полный текст политики конфиденциальности...</p><div class="modal-close-btn"><button id="closePrivacyBtn">Закрыть</button></div></div></div>
+<div id="cookiesModal" class="modal-overlay"><div class="modal-container"><h2>Политика Cookie</h2><p>Полный текст политики cookie...</p><div class="modal-close-btn"><button id="closeCookiesBtn">Закрыть</button></div></div></div>
 <div id="steamModal" class="steam-modal"><div class="steam-modal-content"><h3>⚡ Вход через Steam</h3><button id="realSteamLoginBtn" class="steam-login-btn">Войти через Steam</button><button class="close-modal" id="closeModalBtn">Закрыть</button></div></div>
 
 <script>
-    // ---------- ГЕНЕРАЦИЯ КЕЙСОВ ----------
-    function randomPrice(min, max) { return Math.floor(Math.random() * (max - min + 1) + min); }
-    const fixedCat0 = [29, 57, 75, 179, 250, 328, 499, 659];
-    const caseNames = ["Револьверный кейс","Кейс «Спектр»","Классический кейс","Кейс «Опасная зона»","Кейс «Киллерз»","Кейс «Сны и кошмары»","Кейс «CS20»","Золотой кейс","Кейс «Прорыв»","Кейс «Гамма»","Кейс «Хрома»","Кейс «Призма»","Кейс «Веном»","Кейс «Горизонт»","Кейс «Клатч»","Кейс «Феникс»","Кейс «Энигма»","Кейс «Дата-центр»","Кейс «Нексус»","Кейс «Тантал»","Кейс «Астрал»","Кейс «Тень»","Кейс «Пламя»","Кейс «Ледяной»","Кейс «Пират»","Кейс «Самурай»","Кейс «Техно»","Кейс «Киберпанк»","Кейс «Нео-Токио»","Кейс «Мираж»","Кейс «Пыльный»","Кейс «Вулкан»","Кейс «Шторм»","Кейс «Титан»","Кейс «Легенда»","Кейс «Мастерская»","Кейс «Элит»","Кейс «Кровавый»","Кейс «Изумруд»","Кейс «Абсолют»","Бюджетный кейс","Стартовый кейс","Лайт кейс","Эконом кейс","Базовый кейс","Минимальный кейс","Доступный кейс","Начальный кейс"];
-    let allCases = [];
-    for(let i=0;i<8;i++) allCases.push({name:caseNames[i],price:fixedCat0[i],imageNum:i+1,category:0});
-    for(let i=0;i<8;i++) allCases.push({name:caseNames[8+i],price:randomPrice(67,876),imageNum:9+i,category:1});
-    for(let i=0;i<8;i++) allCases.push({name:caseNames[16+i],price:randomPrice(47,16500),imageNum:17+i,category:2});
-    for(let i=0;i<8;i++) allCases.push({name:caseNames[24+i],price:randomPrice(780,6700),imageNum:25+i,category:3});
-    for(let i=0;i<8;i++) allCases.push({name:caseNames[32+i],price:randomPrice(48,950),imageNum:33+i,category:4});
-    for(let i=0;i<8;i++) allCases.push({name:caseNames[40+i],price:randomPrice(15,120),imageNum:41+i,category:5});
-    const categories = [{id:0,name:"Фирменные кейсы",icon:"🏷️"},{id:1,name:"Раритетные кейсы",icon:"💎"},{id:2,name:"Оружие кейсы",icon:"🔫"},{id:3,name:"Коллекционные кейсы",icon:"🏺"},{id:4,name:"Премиум кейсы",icon:"👑"},{id:5,name:"Бюджетные кейсы",icon:"💰"}];
+    // ========== ПОЛНОЦЕННЫЙ СЧЕТЧИК ОНЛАЙН ==========
+    let visitorId = localStorage.getItem('visitor_id');
+    if (!visitorId) {
+        visitorId = 'visitor_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('visitor_id', visitorId);
+    }
     
+    function updateOnlineCount() {
+        fetch('counter.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'action=heartbeat&visitor_id=' + encodeURIComponent(visitorId)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.online !== undefined) {
+                document.getElementById('onlineCount').textContent = data.online;
+            }
+        })
+        .catch(error => console.log('Ошибка:', error));
+    }
+    
+    // Регистрация посетителя
+    fetch('counter.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'action=register&visitor_id=' + encodeURIComponent(visitorId)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.online !== undefined) {
+            document.getElementById('onlineCount').textContent = data.online;
+        }
+    })
+    .catch(error => console.log('Ошибка регистрации:', error));
+    
+    setInterval(() => { updateOnlineCount(); }, 30000);
+    
+    window.addEventListener('beforeunload', () => {
+        fetch('counter.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'action=unregister&visitor_id=' + encodeURIComponent(visitorId),
+            keepalive: true
+        });
+    });
+    
+    // ========== ОСТАЛЬНОЙ КОД САЙТА ==========
+    if (!localStorage.getItem('skinsynth_data')) {
+        const defaultData = {
+            users: [
+                { id: 1, name: "Player_One", steamId: "76561198000000001", tradeLink: "https://steamcommunity.com/trade/1", balance: 1250, totalDeposit: 5000, totalWithdraw: 3750, cases: ["Открыл кейс 'Револьверный' - выиграл AK-47"], upgrades: ["Апгрейд M4A4 → M4A1-S"], market: ["Продал скин за 150 монет"], crash: ["Ставка 100 монет, множитель 2.5x"], bets: ["Ставка на NAVI - 200 монет"] },
+                { id: 2, name: "CS2_Pro", steamId: "76561198000000002", tradeLink: "https://steamcommunity.com/trade/2", balance: 3400, totalDeposit: 10000, totalWithdraw: 6600, cases: ["Открыл 'Золотой кейс' - выиграл нож"], upgrades: [], market: [], crash: [], bets: [] },
+                { id: 3, name: "SkinCollector", steamId: "76561198000000003", tradeLink: "https://steamcommunity.com/trade/3", balance: 890, totalDeposit: 2000, totalWithdraw: 1110, cases: [], upgrades: [], market: [], crash: [], bets: [] }
+            ],
+            promocodes: [
+                { id: 1, name: "WELCOME10", type: "balance", value: 10, uses: 145, endDate: "2026-12-31" },
+                { id: 2, name: "FREEBOX", type: "case", value: "Золотой кейс", uses: 32, endDate: "2026-10-15" }
+            ],
+            categories: [
+                { id: 1, name: "Фирменные кейсы", cases: ["Револьверный кейс", "Кейс «Спектр»", "Классический кейс"] },
+                { id: 2, name: "Раритетные кейсы", cases: ["Кейс «Прорыв»", "Кейс «Гамма»"] }
+            ],
+            cases: [
+                { id: 1, name: "Револьверный кейс", price: 29, category: "Фирменные кейсы", image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%232dd4bf'%3E%3Crect width='24' height='24' fill='%23111'/%3E%3Ctext x='5' y='16' fill='white'%3E🎁%3C/text%3E%3C/svg%3E", items: ["AK-47 | Фронтовик", "M4A4 | Зенит", "AWP | Паучиха"] },
+                { id: 2, name: "Золотой кейс", price: 659, category: "Фирменные кейсы", image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%232dd4bf'%3E%3Crect width='24' height='24' fill='%23111'/%3E%3Ctext x='5' y='16' fill='white'%3E🎁%3C/text%3E%3C/svg%3E", items: ["Нож-бабочка", "Голубая сталь", "Рубиновый нож"] }
+            ],
+            items: [
+                { id: 1, name: "AK-47 | Фронтовик", rarity: "classified", image: "https://community.cloudflare.steamstatic.com/economy/image/class/730/1", price: 1250, steamLink: "https://steamcommunity.com/market/listings/730/AK-47%20%7C%20Frontside%20Misty" },
+                { id: 2, name: "AWP | Паучиха", rarity: "covert", image: "https://community.cloudflare.steamstatic.com/economy/image/class/730/2", price: 4200, steamLink: "https://steamcommunity.com/market/listings/730/AWP%20%7C%20Gungnir" }
+            ],
+            stats: {
+                totalDeposit: { today: 12500, week: 87400, month: 342000 },
+                totalWithdraw: { today: 8300, week: 62100, month: 256000 },
+                lastDeposit: { user: "Player_One", amount: 500, date: "2026-06-07 14:23" },
+                lastWithdraw: { user: "CS2_Pro", amount: 1200, date: "2026-06-06 19:45" }
+            }
+        };
+        localStorage.setItem('skinsynth_data', JSON.stringify(defaultData));
+    }
+
+    function loadSiteData() { return JSON.parse(localStorage.getItem('skinsynth_data')); }
+    let siteData = loadSiteData();
+
+    function getCasesFromData() { return siteData && siteData.cases ? siteData.cases : []; }
+    function getCategoriesFromData() { return siteData && siteData.categories ? siteData.categories : []; }
+
     function renderCases() {
         const container = document.getElementById('dynamicContent');
-        if(!container) return;
+        if (!container) return;
+        const cases = getCasesFromData();
+        const categories = getCategoriesFromData();
+        if (cases.length === 0) { container.innerHTML = '<div style="text-align:center;padding:60px;">Нет доступных кейсов</div>'; return; }
         container.innerHTML = '';
         categories.forEach(cat => {
+            const catCases = cases.filter(c => c.category === cat.name);
+            if (catCases.length === 0) return;
             const section = document.createElement('div'); section.className = 'category-divider';
-            section.innerHTML = `<div class="category-title"><span class="icon">${cat.icon}</span><span>${cat.name}</span></div><hr><div class="cases-grid"></div>`;
+            section.innerHTML = `<div class="category-title"><span class="icon">🏷️</span><span>${cat.name}</span></div><hr><div class="cases-grid"></div>`;
             const grid = section.querySelector('.cases-grid');
-            allCases.filter(c => c.category === cat.id).forEach(cs => {
+            catCases.forEach(cs => {
                 const card = document.createElement('div'); card.className = 'case-card';
-                card.innerHTML = `<div class="img-wrapper"><img class="case-img" src="img/case/кейс${cs.imageNum}.png" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22100%22%20height=%22100%22%20viewBox=%220%200%2024%2024%22%20fill=%22%232dd4bf%22%3E%3Crect%20width=%2224%22%20height=%2224%22%20fill=%22%23111%22/%3E%3Ctext%20x=%225%22%20y=%2216%22%20fill=%22white%22%3E🎁%3C/text%3E%3C/svg%3E'"></div><div class="case-info"><div class="case-name">${cs.name}</div><div class="case-price"><img class="price-coin" src="img/oblic/money.png" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2226%22%20height=%2226%22%20viewBox=%220%200%2024%2024%22%20fill=%22%23F9A825%22%3E%3Ccircle%20cx=%2212%22%20cy=%2212%22%20r=%2210%22%20fill=%22%23FFD966%22/%3E%3Ctext%20x=%2212%22%20y=%2217%22%20text-anchor=%22middle%22%20fill=%22%238B5A2B%22%3E$%3C/text%3E%3C/svg%3E';"><span class="price-value">${cs.price}</span></div></div>`;
+                card.innerHTML = `<div class="img-wrapper"><img class="case-img" src="${cs.image}" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22100%22%20height=%22100%22%20viewBox=%220%200%2024%2024%22%20fill=%22%232dd4bf%22%3E%3Crect%20width=%2224%22%20height=%2224%22%20fill=%22%23111%22/%3E%3Ctext%20x=%225%22%20y=%2216%22%20fill=%22white%22%3E🎁%3C/text%3E%3C/svg%3E'"></div><div class="case-info"><div class="case-name">${cs.name}</div><div class="case-price"><div class="price-coin" style="width:26px;height:26px;background:#2dd4bf20;border-radius:50%;display:flex;align-items:center;justify-content:center;">💰</div><span class="price-value">${cs.price}</span></div></div>`;
                 card.addEventListener('click', () => showNotification(`🔑 ${cs.name} — ${cs.price} монет`));
                 grid.appendChild(card);
             });
@@ -96,115 +661,24 @@
         document.getElementById('heroBlock').style.display = 'block';
     }
 
-    // ---------- ПАРТНЕРСКАЯ ПРОГРАММА ----------
-    let promoCodes = [];
-    let currentChart = null;
-    function renderPartnerPage() {
-        const container = document.getElementById('dynamicContent');
-        document.getElementById('heroBlock').style.display = 'none';
-        container.innerHTML = `<div class="partner-container"><div class="partner-header"><div class="partner-tab active" data-partner-tab="promo">Промокоды</div><div class="partner-tab" data-partner-tab="history">История выводов</div></div><div id="partnerTabContent"></div></div>`;
-        const promoBtn = container.querySelector('[data-partner-tab="promo"]');
-        const historyBtn = container.querySelector('[data-partner-tab="history"]');
-        function loadTab(tab) {
-            const contentDiv = document.getElementById('partnerTabContent');
-            if(tab === 'promo') {
-                contentDiv.innerHTML = `<div class="promo-creation"><div class="promo-field"><label>Название промокода</label><input type="text" id="promoNameInput" placeholder="SUMMER2026"></div><div class="promo-field"><label>Промокод на (%)</label><input type="number" id="promoPercentInput" value="10"></div><button class="btn-create" id="createPromoBtn">Создать промокод</button></div><table class="promo-table"><thead><tr><th>Промокод</th><th>Активаций</th><th>Выплачено</th><th>Промокод на</th></tr></thead><tbody id="promoTableBody"></tbody></table><div class="stat-chart"><canvas id="promoChart"></canvas><p style="text-align:center;color:#aaa;">Нажмите на промокод для статистики</p></div>`;
-                document.getElementById('createPromoBtn').addEventListener('click', () => {
-                    const name = document.getElementById('promoNameInput').value.trim();
-                    const percent = parseInt(document.getElementById('promoPercentInput').value);
-                    if(!name) { showNotification('Введите название'); return; }
-                    if(isNaN(percent) || percent < 1 || percent > 50) { showNotification('Процент от 1 до 50'); return; }
-                    promoCodes.push({ name, activations: 0, paid: 0, percent, stats: [0,0,0,0,0,0,0] });
-                    renderPromoTable();
-                    document.getElementById('promoNameInput').value = '';
-                    showNotification(`Промокод ${name} создан (${percent}%)`);
-                });
-                renderPromoTable();
-            } else {
-                contentDiv.innerHTML = `<div style="padding:40px;text-align:center;"><div style="font-size:48px;">📜</div><h3>История выводов</h3><div style="background:#0f1420;border-radius:24px;padding:20px;"><li>Вывод 500 монет - 12.04.2026</li><li>Вывод 1200 монет - 05.04.2026</li></div></div>`;
-            }
-        }
-        promoBtn.addEventListener('click', () => { promoBtn.classList.add('active'); historyBtn.classList.remove('active'); loadTab('promo'); });
-        historyBtn.addEventListener('click', () => { historyBtn.classList.add('active'); promoBtn.classList.remove('active'); loadTab('history'); });
-        loadTab('promo');
+    let activeToast = null;
+    function showNotification(msg, dur = 2500) {
+        if (activeToast) activeToast.remove();
+        const toast = document.createElement('div'); toast.className = 'toast-msg'; toast.textContent = msg;
+        document.body.appendChild(toast); activeToast = toast;
+        setTimeout(() => { if (toast?.remove) toast.remove(); if (activeToast === toast) activeToast = null; }, dur);
     }
-    function renderPromoTable() {
-        const tbody = document.getElementById('promoTableBody');
-        if(!tbody) return;
-        tbody.innerHTML = '';
-        promoCodes.forEach((p, idx) => {
-            const row = document.createElement('tr'); row.className = 'promo-row';
-            row.innerHTML = `<td>${p.name}</td><td>${p.activations}</td><td>${p.paid}</td><td>${p.percent}%</td>`;
-            row.addEventListener('click', () => showPromoStats(idx));
-            tbody.appendChild(row);
-        });
-    }
-    function showPromoStats(index) {
-        const promo = promoCodes[index];
-        if(!promo) return;
-        const ctx = document.getElementById('promoChart')?.getContext('2d');
-        if(ctx) {
-            if(currentChart) currentChart.destroy();
-            currentChart = new Chart(ctx, { type: 'line', data: { labels: ['День1','День2','День3','День4','День5','День6','День7'], datasets: [{ label: 'Активации по дням', data: promo.stats, borderColor: '#2dd4bf', tension: 0.3 }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: '#fff' } } } } });
-        }
-        showNotification(`График для ${promo.name}`);
-    }
-    function openPartnerProgram() { renderPartnerPage(); showNotification('Партнерская программа'); setTimeout(() => { if(promoCodes.length === 0) promoCodes.push({ name: "WELCOME10", activations: 42, paid: 1250, percent: 10, stats: [5,8,12,7,4,6,2] }); renderPromoTable(); }, 300); }
 
-    // ---------- НАВИГАЦИЯ ----------
     function switchTab(tab) {
         const container = document.getElementById('dynamicContent');
         const hero = document.getElementById('heroBlock');
-        if(tab === 'cases') { renderCases(); hero.style.display = 'block'; }
-        else if(tab === 'upgrades') { hero.style.display = 'none'; container.innerHTML = `<div style="text-align:center;padding:70px"><div style="font-size:72px;">⚡</div><h3>Апгрейды оружия</h3><p>Скоро</p></div>`; showNotification('Апгрейды');}
-        else if(tab === 'crash') { hero.style.display = 'none'; container.innerHTML = `<div style="text-align:center;padding:70px"><div style="font-size:74px;">📈</div><h3>Краш игра</h3></div>`; showNotification('Краш');}
-        else if(tab === 'bets') { hero.style.display = 'none'; container.innerHTML = `<div style="text-align:center;padding:70px"><div style="font-size:68px;">🏆</div><h3>Ставки на CS2</h3></div>`; showNotification('Ставки');}
-        else if(tab === 'market') { hero.style.display = 'none'; container.innerHTML = `<div style="text-align:center;padding:70px"><div style="font-size:68px;">🛒</div><h3>Маркет скинов</h3></div>`; showNotification('Маркет');}
+        if (tab === 'cases') { renderCases(); hero.style.display = 'block'; }
+        else if (tab === 'upgrades') { hero.style.display = 'none'; container.innerHTML = `<div style="text-align:center;padding:70px"><div style="font-size:72px;">⚡</div><h3>Апгрейды оружия</h3><p>Скоро</p></div>`; showNotification('Апгрейды');}
+        else if (tab === 'crash') { hero.style.display = 'none'; container.innerHTML = `<div style="text-align:center;padding:70px"><div style="font-size:74px;">📈</div><h3>Краш игра</h3></div>`; showNotification('Краш');}
+        else if (tab === 'bets') { hero.style.display = 'none'; container.innerHTML = `<div style="text-align:center;padding:70px"><div style="font-size:68px;">🏆</div><h3>Ставки на CS2</h3></div>`; showNotification('Ставки');}
+        else if (tab === 'market') { hero.style.display = 'none'; container.innerHTML = `<div style="text-align:center;padding:70px"><div style="font-size:68px;">🛒</div><h3>Маркет скинов</h3></div>`; showNotification('Маркет');}
     }
-    
-    let activeToast = null;
-    function showNotification(msg, dur = 2500) {
-        if(activeToast) activeToast.remove();
-        const toast = document.createElement('div'); toast.className = 'toast-msg'; toast.textContent = msg;
-        document.body.appendChild(toast); activeToast = toast;
-        setTimeout(() => { if(toast?.remove) toast.remove(); if(activeToast === toast) activeToast = null; }, dur);
-    }
-    function initOnlineCounter() {
-        const el = document.getElementById('onlineCount');
-        if(el) { let val = Math.floor(Math.random() * 800 + 200); el.innerText = val; setInterval(() => { let n = parseInt(el.innerText) + (Math.random() > 0.5 ? 1 : -1) * Math.floor(Math.random() * 15); n = Math.min(1550, Math.max(190, n)); el.innerText = n; }, 27000); }
-    }
-    
-    // Модалки
-    const termsModal = document.getElementById('termsModal');
-    const privacyModal = document.getElementById('privacyModal');
-    const corpInfoModal = document.getElementById('corpInfoModal');
-    const cookiesModal = document.getElementById('cookiesModal');
-    
-    document.getElementById('termsOfUseLink')?.addEventListener('click', (e) => { e.preventDefault(); termsModal.classList.add('active'); });
-    document.getElementById('privacyPolicyLink')?.addEventListener('click', (e) => { e.preventDefault(); privacyModal.classList.add('active'); });
-    document.getElementById('contactsLink')?.addEventListener('click', (e) => { e.preventDefault(); corpInfoModal.classList.add('active'); });
-    document.getElementById('cookiesLink')?.addEventListener('click', (e) => { e.preventDefault(); cookiesModal.classList.add('active'); });
-    
-    document.getElementById('corpTermsLink')?.addEventListener('click', (e) => { e.preventDefault(); corpInfoModal.classList.remove('active'); termsModal.classList.add('active'); });
-    document.getElementById('corpPrivacyLink')?.addEventListener('click', (e) => { e.preventDefault(); corpInfoModal.classList.remove('active'); privacyModal.classList.add('active'); });
-    document.getElementById('corpCookiesLink')?.addEventListener('click', (e) => { e.preventDefault(); corpInfoModal.classList.remove('active'); cookiesModal.classList.add('active'); });
-    
-    document.getElementById('closeTermsBtn')?.addEventListener('click', () => termsModal.classList.remove('active'));
-    document.getElementById('closePrivacyBtn')?.addEventListener('click', () => privacyModal.classList.remove('active'));
-    document.getElementById('closeCorpInfoBtn')?.addEventListener('click', () => corpInfoModal.classList.remove('active'));
-    document.getElementById('closeCookiesBtn')?.addEventListener('click', () => cookiesModal.classList.remove('active'));
-    
-    [termsModal, privacyModal, corpInfoModal, cookiesModal].forEach(modal => { if(modal) modal.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('active'); }); });
-    document.getElementById('partnerProgramLink')?.addEventListener('click', (e) => { e.preventDefault(); openPartnerProgram(); });
-    
-    // Steam
-    const steamModalDiv = document.getElementById('steamModal');
-    document.getElementById('steamAuthBtn')?.addEventListener('click', () => steamModalDiv.classList.add('active'));
-    document.getElementById('closeModalBtn')?.addEventListener('click', () => steamModalDiv.classList.remove('active'));
-    document.getElementById('realSteamLoginBtn')?.addEventListener('click', () => { showNotification('Перенаправление...'); setTimeout(() => { alert('Демо-вход выполнен'); steamModalDiv.classList.remove('active'); showNotification('Добро пожаловать!'); }, 600); });
-    if(steamModalDiv) steamModalDiv.addEventListener('click', (e) => { if(e.target === steamModalDiv) steamModalDiv.classList.remove('active'); });
-    
-    // Навигация
+
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', () => {
             const tab = link.dataset.tab;
@@ -213,9 +687,46 @@
             switchTab(tab);
         });
     });
+
+    document.getElementById('partnerRedirectBtn')?.addEventListener('click', () => { window.location.href = 'admin.html'; });
+    document.getElementById('partnerProgramLink')?.addEventListener('click', (e) => { e.preventDefault(); window.open('https://example.com/register', '_blank'); });
+
+    const termsModal = document.getElementById('termsModal');
+    const privacyModal = document.getElementById('privacyModal');
+    const corpInfoModal = document.getElementById('corpInfoModal');
+    const cookiesModal = document.getElementById('cookiesModal');
+    const steamModalDiv = document.getElementById('steamModal');
     
+    document.getElementById('termsOfUseLink')?.addEventListener('click', (e) => { e.preventDefault(); termsModal.classList.add('active'); });
+    document.getElementById('privacyPolicyLink')?.addEventListener('click', (e) => { e.preventDefault(); privacyModal.classList.add('active'); });
+    document.getElementById('contactsLink')?.addEventListener('click', (e) => { e.preventDefault(); corpInfoModal.classList.add('active'); });
+    document.getElementById('cookiesLink')?.addEventListener('click', (e) => { e.preventDefault(); cookiesModal.classList.add('active'); });
+    document.getElementById('steamAuthBtn')?.addEventListener('click', () => steamModalDiv.classList.add('active'));
+    
+    document.getElementById('closeTermsBtn')?.addEventListener('click', () => termsModal.classList.remove('active'));
+    document.getElementById('closePrivacyBtn')?.addEventListener('click', () => privacyModal.classList.remove('active'));
+    document.getElementById('closeCorpInfoBtn')?.addEventListener('click', () => corpInfoModal.classList.remove('active'));
+    document.getElementById('closeCookiesBtn')?.addEventListener('click', () => cookiesModal.classList.remove('active'));
+    document.getElementById('closeModalBtn')?.addEventListener('click', () => steamModalDiv.classList.remove('active'));
+    document.getElementById('realSteamLoginBtn')?.addEventListener('click', () => { showNotification('Перенаправление...'); setTimeout(() => { alert('Демо-вход'); steamModalDiv.classList.remove('active'); }, 600); });
+    
+    document.getElementById('corpTermsLink')?.addEventListener('click', (e) => { e.preventDefault(); corpInfoModal.classList.remove('active'); termsModal.classList.add('active'); });
+    document.getElementById('corpPrivacyLink')?.addEventListener('click', (e) => { e.preventDefault(); corpInfoModal.classList.remove('active'); privacyModal.classList.add('active'); });
+    document.getElementById('corpCookiesLink')?.addEventListener('click', (e) => { e.preventDefault(); corpInfoModal.classList.remove('active'); cookiesModal.classList.add('active'); });
+    
+    [termsModal, privacyModal, corpInfoModal, cookiesModal, steamModalDiv].forEach(modal => {
+        if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+    });
+
     renderCases();
-    initOnlineCounter();
+    
+    setInterval(() => {
+        const newData = loadSiteData();
+        if (JSON.stringify(newData) !== JSON.stringify(siteData)) {
+            siteData = newData;
+            if (document.querySelector('.category-divider')) renderCases();
+        }
+    }, 2000);
 </script>
 </body>
 </html>
