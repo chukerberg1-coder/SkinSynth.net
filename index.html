@@ -170,6 +170,23 @@
             filter: brightness(0) invert(1);
         }
 
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #2dd4bf;
+        }
+
+        .user-name {
+            font-size: 0.85rem;
+            color: #2dd4bf;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
         .online-counter {
             display: flex;
             align-items: center;
@@ -386,6 +403,19 @@
             background: linear-gradient(135deg, #1a7a6e, #0f5a50);
             box-shadow: 0 0 10px rgba(45,212,191,0.4);
         }
+
+        .logout-btn {
+            background: rgba(255,80,80,0.2);
+            border: 1px solid #ff5050;
+            border-radius: 16px;
+            padding: 6px 12px;
+            color: #ff8888;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+        .logout-btn:hover {
+            background: rgba(255,80,80,0.4);
+        }
         
         @media (max-width: 780px) {
             .nav-links { gap: 4px; padding: 6px 12px; flex-wrap: wrap; justify-content: center; }
@@ -393,11 +423,11 @@
             .hero h1 { font-size: 2rem; }
             .cases-grid { gap: 20px; }
             .img-wrapper { height: 190px; }
-            .steam-profile-btn span { display: none; }
             .coin-icon { width: 28px; height: 28px; }
             .price-coin { width: 26px; height: 26px; }
             .footer-content { flex-direction: column; gap: 25px; }
             .online-counter span:not(.online-count) { display: none; }
+            .user-name { display: none; }
         }
         .toast-msg {
             position: fixed;
@@ -435,7 +465,7 @@
         .modal-container {
             background: linear-gradient(145deg, #11161f, #0a0e16);
             border-radius: 36px;
-            max-width: 900px;
+            max-width: 600px;
             width: 90%;
             max-height: 85vh;
             overflow-y: auto;
@@ -452,21 +482,7 @@
             border-left: 4px solid #2dd4bf;
             padding-left: 18px;
         }
-        .modal-container h3 {
-            font-size: 1.2rem;
-            color: #c0e0ff;
-            margin: 20px 0 8px 0;
-            font-weight: 600;
-        }
-        .modal-container p, .modal-container li {
-            font-size: 0.9rem;
-            line-height: 1.5;
-            color: #cad2e3;
-            margin-bottom: 8px;
-        }
-        .modal-container ul {
-            margin: 6px 0 6px 28px;
-        }
+        .modal-container p { font-size: 0.9rem; line-height: 1.5; color: #cad2e3; margin-bottom: 8px; }
         .modal-close-btn { display: flex; justify-content: flex-end; margin-top: 20px; }
         .modal-close-btn button {
             background: rgba(45,212,191,0.2);
@@ -475,39 +491,6 @@
             border-radius: 40px;
             color: #2dd4bf;
             cursor: pointer;
-        }
-        .steam-modal {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            visibility: hidden;
-            opacity: 0;
-            transition: 0.2s;
-        }
-        .steam-modal.active { visibility: visible; opacity: 1; }
-        .steam-modal-content {
-            background: linear-gradient(145deg, #151e2c, #0b1018);
-            border-radius: 32px;
-            max-width: 380px;
-            width: 90%;
-            padding: 32px 24px;
-            text-align: center;
-            border: 1px solid rgba(45,212,191,0.5);
-        }
-        .steam-login-btn {
-            background: #1b2838;
-            border-radius: 40px;
-            padding: 14px 28px;
-            color: white;
-            font-weight: 700;
-            cursor: pointer;
-            border: 1px solid #66c0f4;
         }
         .corp-link { color: #2dd4bf; cursor: pointer; }
         .email-highlight { color: #2dd4bf; font-weight: 600; }
@@ -527,13 +510,16 @@
                     <div class="nav-link" data-tab="bets">Ставки</div>
                     <div class="nav-link" data-tab="market">Маркет</div>
                 </div>
-                <div class="user-area">
+                <div class="user-area" id="userArea">
                     <div class="online-counter"><div class="online-dot"></div><span>Онлайн:</span><span class="online-count" id="onlineCount">0</span></div>
                     <div class="balance-block">
                         <img src="img/oblic/money.png" class="coin-icon" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'34\' height=\'34\' viewBox=\'0 0 24 24\' fill=\'%23F9A825\'%3E%3Ccircle cx=\'12\' cy=\'12\' r=\'10\' fill=\'%23FFD966\'/%3E%3Ctext x=\'12\' y=\'17\' text-anchor=\'middle\' fill=\'%238B5A2B\' font-size=\'12\'%3E$%3C/text%3E%3C/svg%3E'">
-                        <span class="balance-amount">12,540</span>
+                        <span class="balance-amount" id="balanceAmount">12,540</span>
                     </div>
-                    <div class="steam-profile-btn" id="steamAuthBtn"><svg class="steam-icon" viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49l.2-.28c.43-.59.73-1.27.88-1.99l.28-1.2c-.56-.29-1.04-.68-1.42-1.15-.94-1.16-1.42-2.63-1.42-4.17 0-3.53 2.87-6.4 6.4-6.4s6.4 2.87 6.4 6.4c0 1.54-.48 3.01-1.42 4.17-.38.47-.86.86-1.42 1.15l.28 1.2c.15.72.45 1.4.88 1.99l.2.28C19.13 20.17 22 16.42 22 12c0-5.52-4.48-10-10-10z"/></svg><span>Steam</span></div>
+                    <div class="steam-profile-btn" id="steamLoginBtn">
+                        <svg class="steam-icon" viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49l.2-.28c.43-.59.73-1.27.88-1.99l.28-1.2c-.56-.29-1.04-.68-1.42-1.15-.94-1.16-1.42-2.63-1.42-4.17 0-3.53 2.87-6.4 6.4-6.4s6.4 2.87 6.4 6.4c0 1.54-.48 3.01-1.42 4.17-.38.47-.86.86-1.42 1.15l.28 1.2c.15.72.45 1.4.88 1.99l.2.28C19.13 20.17 22 16.42 22 12c0-5.52-4.48-10-10-10z"/></svg>
+                        <span id="steamBtnText">Steam</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -576,167 +562,85 @@
     </div>
 </footer>
 
-<!-- ПОЛНОЕ Модальное окно: Пользовательское соглашение -->
-<div id="termsModal" class="modal-overlay">
-    <div class="modal-container">
-        <h2>УСЛОВИЯ ИСПОЛЬЗОВАНИЯ</h2>
-        <h3>I. ОПРЕДЕЛЕНИЯ</h3>
-        <p><strong>1.1</strong> Поставщик услуг – означает компанию SkinSynth.IO.</p>
-        <p><strong>1.2</strong> Сайт (Сайт) – сайт, доступный в сети Интернет по адресу https://skinsynth.io.</p>
-        <p><strong>1.3</strong> Условия – означают настоящие условия.</p>
-        <p><strong>1.4</strong> Пользователь — означает любое лицо в возрасте 18 лет или старше, обладающее полной дееспособностью и соглашающееся подчиняться настоящим Условиям.</p>
-        <p><strong>1.5</strong> Услуга – услуга, предоставляемая Поставщиком услуг Пользователю в электронной форме через Сайт.</p>
-        <p><strong>1.6</strong> GOLD COIN, EVENT COIN - означает универсальные ваучеры, которые можно обменять на различные услуги на Сайте.</p>
-        
-        <h3>II. ОБЩЕЕ</h3>
-        <p><strong>2.1</strong> Ни одно лицо в возрасте до восемнадцати (18) лет не может использовать Сервис.</p>
-        <p><strong>2.2</strong> Незнание настоящих Условий использования не освобождает вас от обязанности их соблюдать.</p>
-        <p><strong>2.3</strong> Для доступа к Сервису вам необходим поддерживаемый веб-браузер.</p>
-        <p><strong>2.4</strong> Вы соглашаетесь войти в систему и зарегистрироваться для использования Услуг через свою учетную запись Steam, предоставленную корпорацией Valve.</p>
-        <p><strong>2.5</strong> Вы несете единоличную ответственность за управление своей учетной записью и паролем.</p>
-        <p><strong>2.6</strong> Вы соглашаетесь с тем, что несете ответственность за все действия, которые происходят с вашей учетной записью.</p>
-        <p><strong>2.7</strong> Вы признаете, что несете единоличную ответственность за понимание и соблюдение любых законов и правил, применимых в стране вашего проживания.</p>
-        <p><strong>2.8</strong> В случае умышленного использования эксплойта страницы такие выигрыши не подлежат выплате.</p>
-        <p><strong>2.9</strong> SkinSynth придерживается строгой политики против мошенничества. На сайте разрешена только одна учетная запись на человека.</p>
-
-        <h3>III. ПОКУПКИ И ЦЕНЫ</h3>
-        <p><strong>3.1</strong> Все покупки совершаются в отношении цифровых/виртуальных (нематериальных) предметов.</p>
-        <p><strong>3.2</strong> Мы оставляем за собой право изменить любую заявленную цену товара.</p>
-
-        <h3>IV. ТОВАРНЫЕ ЗНАКИ</h3>
-        <p><strong>4.1</strong> Все товарные знаки и знаки обслуживания SkinSynth на Сайте являются товарными знаками SkinSynth.</p>
-
-        <h3>V. КЕЙС</h3>
-        <p><strong>5.1</strong> Открывая кейс, вы соглашаетесь принять полученный товар. Предметы, содержащиеся в кейсе, генерируются случайным образом.</p>
-        <p><strong>5.2</strong> Настоящим вы соглашаетесь с тем, что цена кейса соответствует вашим ожиданиям.</p>
-
-        <h3>VI. ВОЗМЕЩЕНИЕ</h3>
-        <p>Мы не несем ответственности за любые прямые, косвенные, особые, случайные или примерные убытки, включая упущенную выгоду, деловую репутацию, использование, данные или другие материальные/нематериальные потери.</p>
-
-        <h3>VII. НИКАКИХ ГАРАНТИЙ</h3>
-        <p><strong>7.1</strong> Этот веб-сайт предоставляется «как есть», без каких-либо заявлений или гарантий.</p>
-        <p><strong>7.2</strong> Ничто на этом веб-сайте не представляет собой какой-либо совет.</p>
-        <p><strong>7.3</strong> Вы соглашаетесь с тем, что используете веб-сайт на свой страх и риск.</p>
-
-        <h3>VIII. ВОЗВРАТ</h3>
-        <p><strong>8.1</strong> Все продажи являются окончательными и не подлежат возврату.</p>
-        <p><strong>8.2</strong> Мы не осуществляем возврат средств за цифровые продукты после подтверждения заказа.</p>
-
-        <h3>IX. КОШЕЛЕК</h3>
-        <p><strong>9.1</strong> Пополняя сумму на свой кошелек SkinSynth, вы соглашаетесь с тем, что полученные кредиты не стоят реальных денег и не подлежат возврату.</p>
-
-        <h3>X. ССЫЛКИ НА ДРУГИЕ ВЕБ-САЙТЫ</h3>
-        <p><strong>10.1</strong> Наш Сервис может содержать ссылки на сторонние веб-сайты.</p>
-        <p><strong>10.2</strong> SkinSynth не контролирует и не несет ответственности за содержимое сторонних веб-сайтов.</p>
-        <p><strong>10.3</strong> Мы рекомендуем вам ознакомиться с условиями и политикой конфиденциальности любых сторонних веб-сайтов.</p>
-        <div class="modal-close-btn"><button id="closeTermsBtn">Закрыть</button></div>
-    </div>
-</div>
-
-<!-- ПОЛНОЕ Модальное окно: Политика конфиденциальности -->
-<div id="privacyModal" class="modal-overlay">
-    <div class="modal-container">
-        <h2>ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ</h2>
-        <p>Данная страница информирует вас о нашей политике сбора, использования и раскрытия личной информации, которую мы получаем от пользователей сайта. Ваша личная информация используется для улучшения сайта. Используя Сайт, вы соглашаетесь на сбор и использование информации в соответствии с данной политикой.</p>
-        
-        <h3>СБОР И ИСПОЛЬЗОВАНИЕ ИНФОРМАЦИИ</h3>
-        <p>При использовании нашего сайта мы можем попросить вас предоставить нам определенную личную информацию, которая может быть использована для связи или идентификации вас. Лично идентифицируемая информация может включать, но не ограничиваться вашим именем ("Личная информация"). Мы будем использовать вашу личную информацию для ответа на ваши запросы, для отправки вам информации, в исследовательских целях, для отправки вам маркетинговой информации о наших товарах и услугах.</p>
-        <p>Также мы собираем информацию, которую ваш браузер отправляет при каждом посещении нашего Сайта ("Данные журнала"). Данный журнал собирает административную информацию, адрес интернет-протокола ("IP") вашего компьютера, тип браузера, версия браузера, страницы нашего Сайта, которые вы посещаете, время и дата вашего посещения, время, проведенное на этих страницах, и другие статистические данные.</p>
-
-        <h3>COOKIES</h3>
-        <p>Cookies - это файлы с небольшим объемом данных, которые могут включать анонимный уникальный идентификатор. Cookies отправляются в ваш браузер с веб-сайта и хранятся на жестком диске вашего компьютера. Как и многие сайты, мы используем "cookies" для сбора такой информации, как: запоминание входа на сайт, запоминание ваших предпочтений по отображению страниц. Вы можете настроить свой браузер так, чтобы он отказывался от всех "cookies" или указывал, когда отправляются "cookies".</p>
-
-        <h3>ЗАЩИТА ИНФОРМАЦИИ</h3>
-        <p>Безопасность вашей личной информации очень важна для нас, но помните, что ни один способ передачи через Интернет или электронный способ хранения данных не гарантирует полной безопасности. Хотя мы стремимся использовать коммерчески приемлемые средства для защиты вашей Личной информации, мы не можем гарантировать ее абсолютную безопасность.</p>
-
-        <h3>ВАШИ ПРАВА</h3>
-        <p>У вас есть права в отношении вашей персональной информации: Право на получение информации о том, как мы обрабатываем ваши данные; Право на исправление информации о вас; Право на доступ и изучение вашей личной информации; Право на удаление или ограничение использования вашей Персональной информации.</p>
-
-        <h3>СОГЛАСИЕ НА ОБРАБОТКУ ДАННЫХ</h3>
-        <p>Согласие на обработку данных должно быть дано в позитивной и утвердительной форме физическими лицами, которые предоставляют свои персональные данные. Ваши персональные данные не будут раскрываться третьим лицам, за исключением случаев, когда такое раскрытие необходимо для обработки ваших запросов или если это требуется по закону.</p>
-
-        <h3>БЕЗОПАСНОСТЬ</h3>
-        <p>Наша компания полностью осознает важность информационной безопасности. Мы храним всю полученную от вас Личную информацию в защищенной базе данных в нашей защищенной сети.</p>
-
-        <h3>КОНТАКТЫ</h3>
-        <p>Если вы хотите обновить или удалить ваши личные данные, а также если у вас есть вопросы, пожалуйста, свяжитесь с нами по электронной почте: kirielgroup@gmail.com</p>
-        <div class="modal-close-btn"><button id="closePrivacyBtn">Закрыть</button></div>
-    </div>
-</div>
-
-<!-- ПОЛНОЕ Модальное окно: Cookies -->
-<div id="cookiesModal" class="modal-overlay">
-    <div class="modal-container">
-        <h2>Политика Cookie</h2>
-        
-        <h3>1. Определения и ключевые термины</h3>
-        <p><strong>1.1</strong> Cookie-файлы: небольшое количество данных, генерируемых веб-сайтом и сохраненных в веб-браузере. Используется для идентификации вашего браузера, обеспечивает аналитику, запоминает информацию о вас, такую как ваши языковые предпочтения или логин.</p>
-        <p><strong>1.2</strong> Компания: SkinSynth, который отвечает за вашу информацию в соответствии с этой Политикой Cookie.</p>
-        <p><strong>1.3</strong> Устройство: любое подключенное к Интернету устройство, такое как телефон, планшет, компьютер.</p>
-        <p><strong>1.4</strong> Персональные данные: любая информация, которая позволяет идентифицировать физическое лицо.</p>
-        <p><strong>1.5</strong> Услуга: относится к услуге, предоставляемой SkinSynth.</p>
-        <p><strong>1.6</strong> Сторонний сервис: рекламодатели, спонсоры, партнеры.</p>
-        <p><strong>1.7</strong> Веб-сайт: https://skinsynth.io/</p>
-
-        <h3>2. Введение</h3>
-        <p>Эта Политика Cookie объясняет, как SkinSynth использует файлы cookie и аналогичные технологии для распознавания вас при посещении нашего веб-сайта.</p>
-
-        <h3>3. Что такое cookie?</h3>
-        <p>Cookie - это небольшой текстовый файл, который хранится на вашем компьютере или другом подключенном к Интернету устройстве для идентификации вашего браузера, обеспечения аналитики, запоминания информации о вас. Они абсолютно безопасны и не могут быть использованы для запуска программ или доставки вирусов.</p>
-
-        <h3>4. Почему мы используем файлы cookie?</h3>
-        <p>Мы используем файлы cookie для различных целей: для облегчения работы и функциональности нашего сайта; для улучшения вашего опыта; для анализа использования сайта; для персонализации маркетинга и рекламы.</p>
-
-        <h3>5. Типы файлов cookie, которые мы используем</h3>
-        <p><strong>Essential Cookies (Строго необходимые):</strong> Необходимы для работы нашего сайта. Без них вы не смогли бы пользоваться основными услугами.</p>
-        <p><strong>Performance and Functionality Cookies:</strong> Повышают производительность и функциональность сайта.</p>
-        <p><strong>Marketing Cookies:</strong> Позволяют персонализировать маркетинговые взаимодействия.</p>
-        <p><strong>Analytics Cookies:</strong> Собирают информацию об использовании сайта для его улучшения. Мы используем Google Analytics.</p>
-        <p><strong>Social Media Cookies:</strong> Используются, когда вы делитесь информацией через социальные сети.</p>
-        <p><strong>Third Party Cookies:</strong> Устанавливаются сторонними поставщиками услуг.</p>
-
-        <h3>6. Как управлять файлами cookie</h3>
-        <p>Вы можете настроить свой браузер для управления файлами cookie. Инструкции для популярных браузеров:</p>
-        <ul>
-            <li>Google Chrome: Настройки → Конфиденциальность и безопасность → Файлы cookie</li>
-            <li>Mozilla Firefox: Настройки → Приватность и защита → Файлы cookie и данные сайтов</li>
-            <li>Safari: Настройки → Конфиденциальность → Файлы cookie</li>
-            <li>Microsoft Edge: Настройки → Файлы cookie и разрешения сайтов</li>
-        </ul>
-
-        <h3>7. Блокировка и отключение файлов cookie</h3>
-        <p>Вы можете настроить браузер на блокировку файлов cookie, но это действие может заблокировать наши основные файлы cookie и помешать правильному функционированию нашего веб-сайта.</p>
-
-        <h3>8. Изменения в политике использования cookie</h3>
-        <p>Мы можем изменять наш сервис и политику. Если мы внесем изменения, мы уведомим вас через наш Сервис. Если вы продолжите пользоваться Сервисом, вы будете связаны обновленной политикой.</p>
-
-        <h3>9. Ваше согласие</h3>
-        <p>Используя наш веб-сайт, вы настоящим соглашаетесь с нашей Политикой Cookie и соглашаетесь с ее условиями.</p>
-
-        <h3>10. Связаться с нами</h3>
-        <p>Не стесняйтесь обращаться к нам kirielgroup@gmail.com, если у вас есть какие-либо вопросы относительно нашей Политики Cookie.</p>
-        <div class="modal-close-btn"><button id="closeCookiesBtn">Закрыть</button></div>
-    </div>
-</div>
-
-<!-- Модальное окно: Корпоративная информация -->
-<div id="corpInfoModal" class="modal-overlay">
-    <div class="modal-container">
-        <h2>SkinSynth КОРПОРАТИВНАЯ ИНФОРМАЦИЯ</h2>
-        <p>Перед использованием сайта просьба ознакомиться с:</p>
-        <p><strong>1.1</strong> <a class="corp-link" id="corpTermsLink">Пользовательское соглашение</a></p>
-        <p><strong>1.2</strong> <a class="corp-link" id="corpPrivacyLink">Политика конфиденциальности</a></p>
-        <p><strong>1.3</strong> <a class="corp-link" id="corpCookiesLink">Политика cookies</a></p>
-        <p><strong>Остались вопросы?</strong></p>
-        <p><strong>2.3</strong> Напишите нам на <span class="email-highlight">kirielgroup@gmail.com</span></p>
-        <div class="modal-close-btn"><button id="closeCorpInfoBtn">Закрыть</button></div>
-    </div>
-</div>
-
-<div id="steamModal" class="steam-modal"><div class="steam-modal-content"><h3>⚡ Вход через Steam</h3><button id="realSteamLoginBtn" class="steam-login-btn">Войти через Steam</button><button class="close-modal" id="closeModalBtn">Закрыть</button></div></div>
+<!-- Модальные окна -->
+<div id="termsModal" class="modal-overlay"><div class="modal-container"><h2>УСЛОВИЯ ИСПОЛЬЗОВАНИЯ</h2><p>Полный текст пользовательского соглашения...</p><div class="modal-close-btn"><button id="closeTermsBtn">Закрыть</button></div></div></div>
+<div id="privacyModal" class="modal-overlay"><div class="modal-container"><h2>ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ</h2><p>Полный текст политики конфиденциальности...</p><div class="modal-close-btn"><button id="closePrivacyBtn">Закрыть</button></div></div></div>
+<div id="cookiesModal" class="modal-overlay"><div class="modal-container"><h2>Политика Cookie</h2><p>Полный текст политики cookie...</p><div class="modal-close-btn"><button id="closeCookiesBtn">Закрыть</button></div></div></div>
+<div id="corpInfoModal" class="modal-overlay"><div class="modal-container"><h2>SkinSynth КОРПОРАТИВНАЯ ИНФОРМАЦИЯ</h2><p>Перед использованием сайта просьба ознакомиться с документами</p><div class="modal-close-btn"><button id="closeCorpInfoBtn">Закрыть</button></div></div></div>
 
 <script>
-    // ========== ПОЛНОЦЕННЫЙ СЧЕТЧИК ОНЛАЙН ==========
+    // ========== STEAM AUTH ==========
+    // Проверяем, авторизован ли пользователь
+    function checkAuth() {
+        const token = localStorage.getItem('steam_token');
+        const userData = localStorage.getItem('steam_user');
+        
+        if (token && userData) {
+            const user = JSON.parse(userData);
+            updateUserUI(user);
+            return true;
+        }
+        return false;
+    }
+    
+    function updateUserUI(user) {
+        const steamBtn = document.getElementById('steamLoginBtn');
+        const userArea = document.getElementById('userArea');
+        
+        if (steamBtn) {
+            steamBtn.innerHTML = `
+                <img src="${user.avatar}" class="user-avatar" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 24 24\' fill=\'%232dd4bf\'%3E%3Ccircle cx=\'12\' cy=\'12\' r=\'10\' fill=\'%23333\'/%3E%3Ctext x=\'12\' y=\'17\' text-anchor=\'middle\' fill=\'white\'%3E👤%3C/text%3E%3C/svg%3E'">
+                <span class="user-name">${user.name}</span>
+                <button class="logout-btn" id="logoutBtn">Выйти</button>
+            `;
+            steamBtn.style.background = '#1a283b';
+            steamBtn.style.border = '1px solid #2dd4bf';
+            
+            document.getElementById('logoutBtn')?.addEventListener('click', logout);
+        }
+    }
+    
+    function logout() {
+        localStorage.removeItem('steam_token');
+        localStorage.removeItem('steam_user');
+        location.reload();
+    }
+    
+    // Перенаправление на Steam авторизацию
+    function redirectToSteam() {
+        // API endpoint для Steam авторизации
+        const steamAuthUrl = 'steam_login.php';
+        window.location.href = steamAuthUrl;
+    }
+    
+    // Обработчик кнопки входа
+    document.getElementById('steamLoginBtn')?.addEventListener('click', function(e) {
+        const token = localStorage.getItem('steam_token');
+        if (!token) {
+            redirectToSteam();
+        }
+    });
+    
+    // Проверяем параметры URL после редиректа
+    const urlParams = new URLSearchParams(window.location.search);
+    const steamId = urlParams.get('steam_id');
+    const playerName = urlParams.get('player');
+    const avatar = urlParams.get('avatar');
+    const token = urlParams.get('token');
+    
+    if (steamId && playerName && token) {
+        localStorage.setItem('steam_token', token);
+        localStorage.setItem('steam_user', JSON.stringify({
+            id: steamId,
+            name: decodeURIComponent(playerName),
+            avatar: decodeURIComponent(avatar)
+        }));
+        // Удаляем параметры из URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+        location.reload();
+    }
+    
+    // ========== ОНЛАЙН СЧЕТЧИК ==========
     let visitorId = localStorage.getItem('visitor_id');
     if (!visitorId) {
         visitorId = 'visitor_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -783,11 +687,13 @@
     });
     
     // ========== ОСТАЛЬНОЙ КОД САЙТА ==========
+    checkAuth();
+    
     if (!localStorage.getItem('skinsynth_data')) {
         const defaultData = {
             users: [
-                { id: 1, name: "Player_One", steamId: "76561198000000001", tradeLink: "https://steamcommunity.com/trade/1", balance: 1250, totalDeposit: 5000, totalWithdraw: 3750, cases: ["Открыл кейс 'Револьверный' - выиграл AK-47"], upgrades: ["Апгрейд M4A4 → M4A1-S"], market: ["Продал скин за 150 монет"], crash: ["Ставка 100 монет, множитель 2.5x"], bets: ["Ставка на NAVI - 200 монет"] },
-                { id: 2, name: "CS2_Pro", steamId: "76561198000000002", tradeLink: "https://steamcommunity.com/trade/2", balance: 3400, totalDeposit: 10000, totalWithdraw: 6600, cases: ["Открыл 'Золотой кейс' - выиграл нож"], upgrades: [], market: [], crash: [], bets: [] },
+                { id: 1, name: "Player_One", steamId: "76561198000000001", tradeLink: "https://steamcommunity.com/trade/1", balance: 1250, totalDeposit: 5000, totalWithdraw: 3750, cases: [], upgrades: [], market: [], crash: [], bets: [] },
+                { id: 2, name: "CS2_Pro", steamId: "76561198000000002", tradeLink: "https://steamcommunity.com/trade/2", balance: 3400, totalDeposit: 10000, totalWithdraw: 6600, cases: [], upgrades: [], market: [], crash: [], bets: [] },
                 { id: 3, name: "SkinCollector", steamId: "76561198000000003", tradeLink: "https://steamcommunity.com/trade/3", balance: 890, totalDeposit: 2000, totalWithdraw: 1110, cases: [], upgrades: [], market: [], crash: [], bets: [] }
             ],
             promocodes: [
@@ -799,13 +705,10 @@
                 { id: 2, name: "Раритетные кейсы", cases: ["Кейс «Прорыв»", "Кейс «Гамма»"] }
             ],
             cases: [
-                { id: 1, name: "Револьверный кейс", price: 29, category: "Фирменные кейсы", image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%232dd4bf'%3E%3Crect width='24' height='24' fill='%23111'/%3E%3Ctext x='5' y='16' fill='white'%3E🎁%3C/text%3E%3C/svg%3E", items: ["AK-47 | Фронтовик", "M4A4 | Зенит", "AWP | Паучиха"] },
-                { id: 2, name: "Золотой кейс", price: 659, category: "Фирменные кейсы", image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%232dd4bf'%3E%3Crect width='24' height='24' fill='%23111'/%3E%3Ctext x='5' y='16' fill='white'%3E🎁%3C/text%3E%3C/svg%3E", items: ["Нож-бабочка", "Голубая сталь", "Рубиновый нож"] }
+                { id: 1, name: "Револьверный кейс", price: 29, category: "Фирменные кейсы", image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%232dd4bf'%3E%3Crect width='24' height='24' fill='%23111'/%3E%3Ctext x='5' y='16' fill='white'%3E🎁%3C/text%3E%3C/svg%3E", items: [] },
+                { id: 2, name: "Золотой кейс", price: 659, category: "Фирменные кейсы", image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%232dd4bf'%3E%3Crect width='24' height='24' fill='%23111'/%3E%3Ctext x='5' y='16' fill='white'%3E🎁%3C/text%3E%3C/svg%3E", items: [] }
             ],
-            items: [
-                { id: 1, name: "AK-47 | Фронтовик", rarity: "classified", image: "https://community.cloudflare.steamstatic.com/economy/image/class/730/1", price: 1250, steamLink: "https://steamcommunity.com/market/listings/730/AK-47%20%7C%20Frontside%20Misty" },
-                { id: 2, name: "AWP | Паучиха", rarity: "covert", image: "https://community.cloudflare.steamstatic.com/economy/image/class/730/2", price: 4200, steamLink: "https://steamcommunity.com/market/listings/730/AWP%20%7C%20Gungnir" }
-            ],
+            items: [],
             stats: {
                 totalDeposit: { today: 12500, week: 87400, month: 342000 },
                 totalWithdraw: { today: 8300, week: 62100, month: 256000 },
@@ -837,7 +740,7 @@
             const grid = section.querySelector('.cases-grid');
             catCases.forEach(cs => {
                 const card = document.createElement('div'); card.className = 'case-card';
-                card.innerHTML = `<div class="img-wrapper"><img class="case-img" src="${cs.image}" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22100%22%20height=%22100%22%20viewBox=%220%200%2024%2024%22%20fill=%22%232dd4bf%22%3E%3Crect%20width=%2224%22%20height=%2224%22%20fill=%22%23111%22/%3E%3Ctext%20x=%225%22%20y=%2216%22%20fill=%22white%22%3E🎁%3C/text%3E%3C/svg%3E'"></div><div class="case-info"><div class="case-name">${cs.name}</div><div class="case-price"><img src="img/oblic/money.png" class="price-coin" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2226%22%20height=%2226%22%20viewBox=%220%200%2024%2024%22%20fill=%22%23F9A825%22%3E%3Ccircle%20cx=%2212%22%20cy=%2212%22%20r=%2210%22%20fill=%22%23FFD966%22/%3E%3Ctext%20x=%2212%22%20y=%2217%22%20text-anchor=%22middle%22%20fill=%22%238B5A2B%22%3E$%3C/text%3E%3C/svg%3E'"><span class="price-value">${cs.price}</span></div></div>`;
+                card.innerHTML = `<div class="img-wrapper"><img class="case-img" src="${cs.image}"></div><div class="case-info"><div class="case-name">${cs.name}</div><div class="case-price"><img src="img/oblic/money.png" class="price-coin" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2226%22%20height=%2226%22%20viewBox=%220%200%2024%2024%22%20fill=%22%23F9A825%22%3E%3Ccircle%20cx=%2212%22%20cy=%2212%22%20r=%2210%22%20fill=%22%23FFD966%22/%3E%3Ctext%20x=%2212%22%20y=%2217%22%20text-anchor=%22middle%22%20fill=%22%238B5A2B%22%3E$%3C/text%3E%3C/svg%3E'"><span class="price-value">${cs.price}</span></div></div>`;
                 card.addEventListener('click', () => showNotification(`🔑 ${cs.name} — ${cs.price} монет`));
                 grid.appendChild(card);
             });
@@ -873,11 +776,9 @@
         });
     });
 
-    // Партнерская программа - открывает страницу партнерской программы
     document.getElementById('partnerProgramLink')?.addEventListener('click', (e) => {
         e.preventDefault();
-        // Открываем страницу партнерской программы в новом окне
-        window.open('partner.html', '_blank');
+        window.location.href = 'partner.html';
     });
     
     document.getElementById('partnerRedirectBtn')?.addEventListener('click', () => { window.location.href = 'admin.html'; });
@@ -886,26 +787,18 @@
     const privacyModal = document.getElementById('privacyModal');
     const corpInfoModal = document.getElementById('corpInfoModal');
     const cookiesModal = document.getElementById('cookiesModal');
-    const steamModalDiv = document.getElementById('steamModal');
     
     document.getElementById('termsOfUseLink')?.addEventListener('click', (e) => { e.preventDefault(); termsModal.classList.add('active'); });
     document.getElementById('privacyPolicyLink')?.addEventListener('click', (e) => { e.preventDefault(); privacyModal.classList.add('active'); });
     document.getElementById('contactsLink')?.addEventListener('click', (e) => { e.preventDefault(); corpInfoModal.classList.add('active'); });
     document.getElementById('cookiesLink')?.addEventListener('click', (e) => { e.preventDefault(); cookiesModal.classList.add('active'); });
-    document.getElementById('steamAuthBtn')?.addEventListener('click', () => steamModalDiv.classList.add('active'));
     
     document.getElementById('closeTermsBtn')?.addEventListener('click', () => termsModal.classList.remove('active'));
     document.getElementById('closePrivacyBtn')?.addEventListener('click', () => privacyModal.classList.remove('active'));
     document.getElementById('closeCorpInfoBtn')?.addEventListener('click', () => corpInfoModal.classList.remove('active'));
     document.getElementById('closeCookiesBtn')?.addEventListener('click', () => cookiesModal.classList.remove('active'));
-    document.getElementById('closeModalBtn')?.addEventListener('click', () => steamModalDiv.classList.remove('active'));
-    document.getElementById('realSteamLoginBtn')?.addEventListener('click', () => { showNotification('Перенаправление...'); setTimeout(() => { alert('Демо-вход'); steamModalDiv.classList.remove('active'); }, 600); });
     
-    document.getElementById('corpTermsLink')?.addEventListener('click', (e) => { e.preventDefault(); corpInfoModal.classList.remove('active'); termsModal.classList.add('active'); });
-    document.getElementById('corpPrivacyLink')?.addEventListener('click', (e) => { e.preventDefault(); corpInfoModal.classList.remove('active'); privacyModal.classList.add('active'); });
-    document.getElementById('corpCookiesLink')?.addEventListener('click', (e) => { e.preventDefault(); corpInfoModal.classList.remove('active'); cookiesModal.classList.add('active'); });
-    
-    [termsModal, privacyModal, corpInfoModal, cookiesModal, steamModalDiv].forEach(modal => {
+    [termsModal, privacyModal, corpInfoModal, cookiesModal].forEach(modal => {
         if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
     });
 
