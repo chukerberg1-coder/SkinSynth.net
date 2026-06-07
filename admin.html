@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkinSynth | Админ-панель</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(145deg, #0c0f15 0%, #06080c 100%);
+            font-family: 'Inter', sans-serif;
+            color: #eef2ff;
+            line-height: 1.4;
+            min-height: 100vh;
+        }
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .login-container {
+            background: linear-gradient(145deg, #11161f, #0a0e16);
+            border-radius: 48px;
+            padding: 48px 40px;
+            width: 90%;
+            max-width: 420px;
+            border: 1px solid rgba(45, 212, 191, 0.5);
+        }
+        .login-container h2 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #fff, #2dd4bf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+        .login-container input {
+            width: 100%;
+            background: #0f1420;
+            border: 1px solid #2c3e50;
+            padding: 14px 18px;
+            border-radius: 28px;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            outline: none;
+        }
+        .login-container input:focus {
+            border-color: #2dd4bf;
+        }
+        .login-container button {
+            width: 100%;
+            background: linear-gradient(95deg, #2dd4bf, #1e9b8a);
+            border: none;
+            padding: 14px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: #0a0f1a;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .error-msg {
+            color: #ff6b6b;
+            text-align: center;
+            margin-top: 16px;
+        }
+        .admin-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 280px;
+            background: rgba(10, 14, 23, 0.95);
+            border-right: 1px solid rgba(45, 212, 191, 0.2);
+            padding: 24px 0;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+        .sidebar-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #E0F2FE, #2dd4bf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            padding: 0 20px 20px 20px;
+            border-bottom: 1px solid rgba(45,212,191,0.2);
+            margin-bottom: 20px;
+        }
+        .sidebar-section {
+            margin-bottom: 8px;
+        }
+        .sidebar-section-title {
+            padding: 12px 20px;
+            font-weight: 700;
+            color: rgba(125, 211, 252, 0.7);
+            cursor: pointer;
+        }
+        .sidebar-section-title:hover {
+            background: rgba(45,212,191,0.1);
+        }
+        .sidebar-submenu {
+            padding-left: 20px;
+            display: block;
+        }
+        .sidebar-subitem {
+            padding: 10px 20px 10px 40px;
+            cursor: pointer;
+            color: #b9c7d9;
+            font-size: 0.9rem;
+            border-radius: 12px;
+        }
+        .sidebar-subitem:hover {
+            background: rgba(45,212,191,0.15);
+            color: #2dd4bf;
+        }
+        .sidebar-subitem.active {
+            background: rgba(45,212,191,0.2);
+            color: #2dd4bf;
+        }
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px 40px;
+        }
+        .stats-row {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: rgba(18, 24, 34, 0.6);
+            border-radius: 28px;
+            padding: 24px;
+            flex: 1;
+            min-width: 200px;
+            border: 1px solid rgba(45,212,191,0.2);
+        }
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: #8ea1bd;
+            margin-bottom: 16px;
+        }
+        .stat-values {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-item .period {
+            font-size: 0.7rem;
+            color: #6c7a8e;
+        }
+        .stat-item .amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fee7a0;
+        }
+        .last-transaction {
+            background: rgba(18, 24, 34, 0.6);
+            border-radius: 28px;
+            padding: 24px 32px;
+            flex: 1;
+            min-width: 280px;
+            border: 1px solid rgba(45,212,191,0.2);
+        }
+        .last-transaction h4 {
+            margin-bottom: 12px;
+            color: #7dd3fc;
+            font-size: 1.1rem;
+        }
+        .table-container {
+            background: rgba(18, 24, 34, 0.6);
+            border-radius: 28px;
+            overflow-x: auto;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(45,212,191,0.15);
+        }
+        th {
+            color: #7dd3fc;
+            font-weight: 600;
+        }
+        .user-row, .promo-row, .item-row {
+            cursor: pointer;
+        }
+        .user-row:hover, .promo-row:hover, .item-row:hover {
+            background: rgba(45,212,191,0.1);
+        }
+        .btn-primary {
+            background: linear-gradient(95deg, #2dd4bf, #1e9b8a);
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: #0a0f1a;
+            cursor: pointer;
+        }
+        .btn-secondary {
+            background: rgba(45,212,191,0.2);
+            border: 1px solid #2dd4bf;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: #2dd4bf;
+            cursor: pointer;
+        }
+        .btn-danger {
+            background: rgba(255,80,80,0.2);
+            border: 1px solid #ff5050;
+            padding: 6px 16px;
+            border-radius: 40px;
+            color: #ff8888;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .header-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 24px;
+            gap: 12px;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(14px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1100;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+        }
+        .modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal-container {
+            background: linear-gradient(145deg, #11161f, #0a0e16);
+            border-radius: 36px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 28px 32px;
+            border: 1px solid rgba(45,212,191,0.5);
+        }
+        .modal-container h3 {
+            margin-bottom: 24px;
+            color: #2dd4bf;
+        }
+        .modal-container input, .modal-container select, .modal-container textarea {
+            width: 100%;
+            background: #0f1420;
+            border: 1px solid #2c3e50;
+            padding: 12px 16px;
+            border-radius: 24px;
+            color: white;
+            margin-bottom: 16px;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        .user-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .user-stat-card {
+            background: rgba(0,0,0,0.3);
+            padding: 16px;
+            border-radius: 20px;
+        }
+        .history-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .history-item {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(45,212,191,0.1);
+        }
+        .case-item, .category-item, .item-card {
+            background: rgba(0,0,0,0.2);
+            padding: 12px 16px;
+            border-radius: 16px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .case-item:hover, .category-item:hover, .item-card:hover {
+            background: rgba(45,212,191,0.1);
+        }
+        .delete-cat-btn {
+            background: rgba(255,80,80,0.2);
+            border: 1px solid #ff5050;
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: #ff8888;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+        .items-list {
+            margin-top: 16px;
+        }
+        .rarity-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .rarity-consumer { background: #4b69ff; color: white; }
+        .rarity-industrial { background: #5e98d9; color: white; }
+        .rarity-mil-spec { background: #4b69ff; color: white; }
+        .rarity-restricted { background: #8847ff; color: white; }
+        .rarity-classified { background: #d32ce6; color: white; }
+        .rarity-covert { background: #eb4b4b; color: white; }
+        .rarity-contraband { background: #ffd700; color: #0a0f1a; }
+        .item-preview-img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.3);
+        }
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+        .parse-loading {
+            color: #2dd4bf;
+            font-size: 0.8rem;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Окно входа -->
+<div id="loginOverlay" class="login-overlay">
+    <div class="login-container">
+        <h2>🔐 Админ-панель</h2>
+        <input type="text" id="loginInput" placeholder="Логин" autocomplete="off">
+        <input type="password" id="passwordInput" placeholder="Пароль">
+        <button id="loginBtn">Войти</button>
+        <div id="loginError" class="error-msg"></div>
+    </div>
+</div>
+
+<!-- Админ панель (скрыта) -->
+<div id="adminPanel" style="display: none;">
+    <div class="admin-wrapper">
+        <div class="sidebar">
+            <div class="sidebar-logo">SkinSynth<br><span style="font-size: 0.8rem;">Admin Panel</span></div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title" id="statisticsBtn">📊 Статистика</div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">🎨 Интерфейс</div>
+                <div class="sidebar-submenu">
+                    <div class="sidebar-subitem" data-page="users">👥 Пользователи</div>
+                    <div class="sidebar-subitem" data-page="bots">🤖 Боты</div>
+                    <div class="sidebar-subitem" data-page="promocodes">🎫 Промокоды</div>
+                    <div class="sidebar-subitem" data-page="giveaways">🎁 Розыгрыши</div>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">📦 Управление кейсами</div>
+                <div class="sidebar-submenu">
+                    <div class="sidebar-subitem" data-page="categories">📂 Категории</div>
+                    <div class="sidebar-subitem" data-page="caseslist">🎲 Кейсы</div>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">⚙️ Система</div>
+                <div class="sidebar-submenu">
+                    <div class="sidebar-subitem" data-page="items">🎯 Предметы</div>
+                </div>
+            </div>
+        </div>
+        <div class="main-content" id="mainContent"></div>
+    </div>
+</div>
+
+<script>
+    // ========== ИНИЦИАЛИЗАЦИЯ ДАННЫХ ==========
+    if (!localStorage.getItem('skinsynth_admin_data')) {
+        const defaultData = {
+            users: [
+                { id: 1, name: "Player_One", steamId: "76561198000000001", tradeLink: "https://steamcommunity.com/trade/1", balance: 1250, totalDeposit: 5000, totalWithdraw: 3750, cases: ["Открыл кейс 'Револьверный' - выиграл AK-47"], upgrades: ["Апгрейд M4A4 → M4A1-S"], market: ["Продал скин за 150 монет"], crash: ["Ставка 100 монет, множитель 2.5x"], bets: ["Ставка на NAVI - 200 монет"] },
+                { id: 2, name: "CS2_Pro", steamId: "76561198000000002", tradeLink: "https://steamcommunity.com/trade/2", balance: 3400, totalDeposit: 10000, totalWithdraw: 6600, cases: ["Открыл 'Золотой кейс' - выиграл нож"], upgrades: [], market: [], crash: [], bets: [] },
+                { id: 3, name: "SkinCollector", steamId: "76561198000000003", tradeLink: "https://steamcommunity.com/trade/3", balance: 890, totalDeposit: 2000, totalWithdraw: 1110, cases: [], upgrades: [], market: [], crash: [], bets: [] }
+            ],
+            promocodes: [
+                { id: 1, name: "WELCOME10", type: "balance", value: 10, uses: 145, endDate: "2026-12-31" },
+                { id: 2, name: "FREEBOX", type: "case", value: "Золотой кейс", uses: 32, endDate: "2026-10-15" }
+            ],
+            categories: [
+                { id: 1, name: "Фирменные кейсы", cases: ["Револьверный кейс", "Кейс «Спектр»", "Классический кейс"] },
+                { id: 2, name: "Раритетные кейсы", cases: ["Кейс «Прорыв»", "Кейс «Гамма»"] }
+            ],
+            cases: [
+                { id: 1, name: "Револьверный кейс", price: 29, category: "Фирменные кейсы", image: "img/case/кейс1.png", items: ["AK-47 | Фронтовик", "M4A4 | Зенит", "AWP | Паучиха"] },
+                { id: 2, name: "Золотой кейс", price: 659, category: "Фирменные кейсы", image: "img/case/кейс8.png", items: ["Нож-бабочка", "Голубая сталь", "Рубиновый нож"] }
+            ],
+            items: [
+                { id: 1, name: "AK-47 | Фронтовик", rarity: "classified", image: "https://community.cloudflare.steamstatic.com/economy/image/class/730/1", price: 1250, steamLink: "https://steamcommunity.com/market/listings/730/AK-47%20%7C%20Frontside%20Misty" },
+                { id: 2, name: "AWP | Паучиха", rarity: "covert", image: "https://community.cloudflare.steamstatic.com/economy/image/class/730/2", price: 4200, steamLink: "https://steamcommunity.com/market/listings/730/AWP%20%7C%20Gungnir" }
+            ],
+            stats: {
+                totalDeposit: { today: 12500, week: 87400, month: 342000 },
+                totalWithdraw: { today: 8300, week: 62100, month: 256000 },
+                lastDeposit: { user: "Player_One", amount: 500, date: "2026-06-07 14:23" },
+                lastWithdraw: { user: "CS2_Pro", amount: 1200, date: "2026-06-06 19:45" }
+            }
+        };
+        localStorage.setItem('skinsynth_admin_data', JSON.stringify(defaultData));
+        localStorage.setItem('skinsynth_data', JSON.stringify(defaultData));
+    }
+
+    function loadData() {
+        return JSON.parse(localStorage.getItem('skinsynth_admin_data'));
+    }
+
+    function saveData(data) {
+        localStorage.setItem('skinsynth_admin_data', JSON.stringify(data));
+        localStorage.setItem('skinsynth_data', JSON.stringify(data));
+    }
+
+    let siteData = loadData();
+    let selectedUser = null;
+
+    // ========== АУТЕНТИФИКАЦИЯ ==========
+    const loginOverlay = document.getElementById('loginOverlay');
+    const adminPanel = document.getElementById('adminPanel');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginInput = document.getElementById('loginInput');
+    const passwordInput = document.getElementById('passwordInput');
+    const loginError = document.getElementById('loginError');
+
+    function doLogin() {
+        const login = loginInput.value.trim();
+        const password = passwordInput.value;
+        
+        if (login === "Kiriel" && password === "sxz9(K*8df_Violetta1LOVE") {
+            loginOverlay.style.display = 'none';
+            adminPanel.style.display = 'block';
+            loadPage('statistics');
+        } else {
+            loginError.textContent = 'Неверный логин или пароль';
+        }
+    }
+
+    loginBtn.onclick = doLogin;
+    passwordInput.onkeypress = function(e) {
+        if (e.key === 'Enter') {
+            doLogin();
+        }
+    };
+
+    // ========== НАВИГАЦИЯ ==========
+    function loadPage(page) {
+        const content = document.getElementById('mainContent');
+        if (page === 'statistics') renderStatistics(content);
+        else if (page === 'users') renderUsers(content);
+        else if (page === 'bots') content.innerHTML = `<div class="table-container"><h3>🤖 Боты</h3><p style="padding:40px;text-align:center;">Раздел в разработке</p></div>`;
+        else if (page === 'promocodes') renderPromocodes(content);
+        else if (page === 'giveaways') content.innerHTML = `<div class="table-container"><h3>🎁 Розыгрыши</h3><p style="padding:40px;text-align:center;">Раздел в разработке</p></div>`;
+        else if (page === 'categories') renderCategories(content);
+        else if (page === 'caseslist') renderCasesList(content);
+        else if (page === 'items') renderItems(content);
+    }
+
+    // ========== СТАТИСТИКА ==========
+    function renderStatistics(container) {
+        const s = siteData.stats;
+        container.innerHTML = `
+            <div class="stats-row">
+                <div class="stat-card"><h3>💰 Пополнений на</h3><div class="stat-values"><div class="stat-item"><span class="period">Сегодня</span><div class="amount">${s.totalDeposit.today}₽</div></div><div class="stat-item"><span class="period">Неделя</span><div class="amount">${s.totalDeposit.week}₽</div></div><div class="stat-item"><span class="period">Месяц</span><div class="amount">${s.totalDeposit.month}₽</div></div></div></div>
+                <div class="stat-card"><h3>💸 Выводов на</h3><div class="stat-values"><div class="stat-item"><span class="period">Сегодня</span><div class="amount">${s.totalWithdraw.today}₽</div></div><div class="stat-item"><span class="period">Неделя</span><div class="amount">${s.totalWithdraw.week}₽</div></div><div class="stat-item"><span class="period">Месяц</span><div class="amount">${s.totalWithdraw.month}₽</div></div></div></div>
+            </div>
+            <div class="stats-row">
+                <div class="last-transaction"><h4>📥 Последнее пополнение</h4><p>${s.lastDeposit.user} — ${s.lastDeposit.amount}₽ (${s.lastDeposit.date})</p></div>
+                <div class="last-transaction"><h4>📤 Последний вывод</h4><p>${s.lastWithdraw.user} — ${s.lastWithdraw.amount}₽ (${s.lastWithdraw.date})</p></div>
+            </div>
+        `;
+    }
+
+    // ========== ПОЛЬЗОВАТЕЛИ ==========
+    function renderUsers(container) {
+        let html = `<div class="header-actions"><h3>👥 Все пользователи</h3></div><div class="table-container"><table><thead><tr><th>ID</th><th>Имя</th><th>Steam ID</th><th>Баланс</th><th>Всего пополнено</th><th>Всего выведено</th></tr></thead><tbody>`;
+        siteData.users.forEach(user => {
+            html += `<tr class="user-row" data-user-id="${user.id}"><td>${user.id}</td><td>${user.name}</td><td>${user.steamId}</td><td>${user.balance}₽</td><td>${user.totalDeposit}₽</td><td>${user.totalWithdraw}₽</td></tr>`;
+        });
+        html += `</tbody>}</div>`;
+        container.innerHTML = html;
+        document.querySelectorAll('.user-row').forEach(row => {
+            row.onclick = () => {
+                const userId = parseInt(row.dataset.userId);
+                selectedUser = siteData.users.find(u => u.id === userId);
+                if (selectedUser) renderUserDetail(container);
+            };
+        });
+    }
+
+    function renderUserDetail(container) {
+        container.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+                <h2>👤 ${selectedUser.name}</h2>
+                <button class="btn-secondary" id="backToUsersBtn">← Назад</button>
+            </div>
+            <div class="user-stats-grid">
+                <div class="user-stat-card"><strong>💰 Баланс:</strong> ${selectedUser.balance}₽<br><input type="number" id="newBalance" value="${selectedUser.balance}" style="margin-top:8px; width:120px;"><button id="updateBalanceBtn" class="btn-primary" style="margin-top:8px; padding:6px 16px;">Изменить</button></div>
+                <div class="user-stat-card"><strong>📈 Пополнено:</strong> ${selectedUser.totalDeposit}₽</div>
+                <div class="user-stat-card"><strong>📉 Выведено:</strong> ${selectedUser.totalWithdraw}₽</div>
+                <div class="user-stat-card"><strong>🔗 Steam профиль:</strong> <a href="${selectedUser.steamId}" target="_blank" style="color:#2dd4bf;">Открыть</a></div>
+                <div class="user-stat-card"><strong>🔄 Ссылка на обмен:</strong> <a href="${selectedUser.tradeLink}" target="_blank" style="color:#2dd4bf;">Открыть</a></div>
+            </div>
+            <div class="table-container"><h4>🎲 История открытий кейсов</h4><div class="history-list">${selectedUser.cases.map(c => `<div class="history-item">📦 ${c}</div>`).join('') || '<p>Нет данных</p>'}</div></div>
+            <div class="table-container" style="margin-top:20px;"><h4>⚡ История апгрейдов</h4><div class="history-list">${selectedUser.upgrades.map(u => `<div class="history-item">🔧 ${u}</div>`).join('') || '<p>Нет данных</p>'}</div></div>
+            <div class="table-container" style="margin-top:20px;"><h4>🛒 История маркета</h4><div class="history-list">${selectedUser.market.map(m => `<div class="history-item">${m}</div>`).join('') || '<p>Нет данных</p>'}</div></div>
+            <div class="table-container" style="margin-top:20px;"><h4>💥 История краша</h4><div class="history-list">${selectedUser.crash.map(c => `<div class="history-item">📈 ${c}</div>`).join('') || '<p>Нет данных</p>'}</div></div>
+            <div class="table-container" style="margin-top:20px;"><h4>🏆 История ставок</h4><div class="history-list">${selectedUser.bets.map(b => `<div class="history-item">${b}</div>`).join('') || '<p>Нет данных</p>'}</div></div>
+        `;
+        document.getElementById('backToUsersBtn').onclick = () => renderUsers(container);
+        document.getElementById('updateBalanceBtn').onclick = () => {
+            const newVal = parseInt(document.getElementById('newBalance').value);
+            if (!isNaN(newVal)) {
+                selectedUser.balance = newVal;
+                const originalUser = siteData.users.find(u => u.id === selectedUser.id);
+                if (originalUser) originalUser.balance = newVal;
+                saveData(siteData);
+                renderUserDetail(container);
+            }
+        };
+    }
+
+    // ========== ПРОМОКОДЫ ==========
+    function renderPromocodes(container) {
+        function buildTable() {
+            let html = `<div class="header-actions"><button class="btn-primary" id="createPromoBtn">+ Создать промокод</button></div><div class="table-container"> <table><thead><tr><th>Название</th><th>Тип</th><th>Значение</th><th>Использований</th><th>Действует до</th><th>Действия</th></tr></thead><tbody>`;
+            siteData.promocodes.forEach(p => {
+                html += `<tr><td>${p.name}</td><td>${p.type === 'balance' ? 'Баланс (+%)' : 'Кейс'}</td><td>${p.type === 'balance' ? p.value + '%' : p.value}</td><td>${p.uses}</td><td>${p.endDate || 'Без срока'}</td><td><button class="btn-danger delete-promo" data-id="${p.id}">🗑 Удалить</button></td></tr>`;
+            });
+            html += `</tbody></table></div>`;
+            container.innerHTML = html;
+            document.getElementById('createPromoBtn').onclick = showCreatePromoModal;
+            document.querySelectorAll('.delete-promo').forEach(btn => {
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    const id = parseInt(btn.dataset.id);
+                    siteData.promocodes = siteData.promocodes.filter(p => p.id !== id);
+                    saveData(siteData);
+                    buildTable();
+                };
+            });
+        }
+        function showCreatePromoModal() {
+            const modal = document.createElement('div'); modal.className = 'modal-overlay active';
+            modal.innerHTML = `<div class="modal-container"><h3>➕ Создать промокод</h3><input type="text" id="promoName" placeholder="Название"><select id="promoType"><option value="balance">Баланс (+%)</option><option value="case">Кейс</option></select><input type="text" id="promoValue" placeholder="Значение"><input type="date" id="promoEndDate"><div class="modal-buttons"><button class="btn-secondary" id="cancelPromoBtn">Отмена</button><button class="btn-primary" id="savePromoBtn">Создать</button></div></div>`;
+            document.body.appendChild(modal);
+            document.getElementById('cancelPromoBtn').onclick = () => modal.remove();
+            document.getElementById('savePromoBtn').onclick = () => {
+                const name = document.getElementById('promoName').value.trim();
+                const type = document.getElementById('promoType').value;
+                const value = document.getElementById('promoValue').value.trim();
+                const endDate = document.getElementById('promoEndDate').value;
+                if (!name || !value) return;
+                siteData.promocodes.push({ id: Date.now(), name, type, value: type === 'balance' ? parseInt(value) : value, uses: 0, endDate: endDate || null });
+                saveData(siteData);
+                modal.remove();
+                buildTable();
+            };
+        }
+        buildTable();
+    }
+
+    // ========== КАТЕГОРИИ ==========
+    function renderCategories(container) {
+        function buildCategories() {
+            let html = `<div class="header-actions"><button class="btn-primary" id="addCategoryBtn">+ Добавить категорию</button></div><div class="items-list">`;
+            siteData.categories.forEach(cat => {
+                html += `<div class="category-item" data-cat-id="${cat.id}"><span><strong>📁 ${cat.name}</strong> (${cat.cases.length} кейсов)</span><button class="delete-cat-btn" data-id="${cat.id}">🗑 Удалить</button></div>`;
+            });
+            html += `</div>`;
+            container.innerHTML = html;
+            document.querySelectorAll('.delete-cat-btn').forEach(btn => {
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    const catId = parseInt(btn.dataset.id);
+                    if (confirm('Удалить категорию?')) {
+                        siteData.categories = siteData.categories.filter(c => c.id !== catId);
+                        saveData(siteData);
+                        buildCategories();
+                    }
+                };
+            });
+            document.getElementById('addCategoryBtn').onclick = () => {
+                const modal = document.createElement('div'); modal.className = 'modal-overlay active';
+                modal.innerHTML = `<div class="modal-container"><h3>➕ Новая категория</h3><input type="text" id="catName" placeholder="Название"><input type="text" id="catCases" placeholder="Кейсы через запятую"><div class="modal-buttons"><button class="btn-secondary" id="cancelCatBtn">Отмена</button><button class="btn-primary" id="saveCatBtn">Создать</button></div></div>`;
+                document.body.appendChild(modal);
+                document.getElementById('cancelCatBtn').onclick = () => modal.remove();
+                document.getElementById('saveCatBtn').onclick = () => {
+                    const name = document.getElementById('catName').value.trim();
+                    const casesInput = document.getElementById('catCases').value.trim();
+                    if (!name) return;
+                    siteData.categories.push({ id: Date.now(), name, cases: casesInput ? casesInput.split(',').map(s=>s.trim()).filter(s=>s) : [] });
+                    saveData(siteData);
+                    modal.remove();
+                    buildCategories();
+                };
+            };
+        }
+        buildCategories();
+    }
+
+    // ========== КЕЙСЫ ==========
+    function renderCasesList(container) {
+        function buildCases() {
+            let html = `<div class="header-actions"><button class="btn-primary" id="addCaseBtn">+ Добавить кейс</button></div><div class="items-list">`;
+            siteData.cases.forEach(cs => {
+                html += `<div class="case-item" data-case-id="${cs.id}"><span><strong>🎲 ${cs.name}</strong> — ${cs.price}₽ (${cs.category})</span></div>`;
+            });
+            html += `</div>`;
+            container.innerHTML = html;
+            document.querySelectorAll('.case-item').forEach(el => {
+                el.onclick = () => {
+                    const caseData = siteData.cases.find(c => c.id === parseInt(el.dataset.caseId));
+                    if (caseData) editCase(caseData);
+                };
+            });
+            document.getElementById('addCaseBtn').onclick = () => {
+                const modal = document.createElement('div'); modal.className = 'modal-overlay active';
+                modal.innerHTML = `<div class="modal-container"><h3>➕ Добавить кейс</h3><input type="text" id="caseName" placeholder="Название"><input type="number" id="casePrice" placeholder="Цена"><input type="text" id="caseImage" placeholder="Ссылка на изображение"><select id="caseCategory">${siteData.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('')}</select><textarea id="caseItems" rows="3" placeholder="Предметы"></textarea><div class="modal-buttons"><button class="btn-secondary" id="cancelCaseBtn">Отмена</button><button class="btn-primary" id="saveCaseBtn">Создать</button></div></div>`;
+                document.body.appendChild(modal);
+                document.getElementById('cancelCaseBtn').onclick = () => modal.remove();
+                document.getElementById('saveCaseBtn').onclick = () => {
+                    const name = document.getElementById('caseName').value.trim();
+                    const price = parseInt(document.getElementById('casePrice').value);
+                    const image = document.getElementById('caseImage').value.trim();
+                    const category = document.getElementById('caseCategory').value;
+                    const items = document.getElementById('caseItems').value.split('\n').filter(s=>s.trim());
+                    if (!name || !price || !image || !category) return;
+                    siteData.cases.push({ id: Date.now(), name, price, category, image, items });
+                    const cat = siteData.categories.find(c => c.name === category);
+                    if (cat && !cat.cases.includes(name)) cat.cases.push(name);
+                    saveData(siteData);
+                    modal.remove();
+                    buildCases();
+                };
+            };
+        }
+        function editCase(caseData) {
+            const modal = document.createElement('div'); modal.className = 'modal-overlay active';
+            modal.innerHTML = `<div class="modal-container"><h3>✏️ Редактировать кейс</h3><input type="text" id="caseName" value="${caseData.name}"><input type="number" id="casePrice" value="${caseData.price}"><input type="text" id="caseImage" value="${caseData.image}"><select id="caseCategory">${siteData.categories.map(c => `<option value="${c.name}" ${c.name === caseData.category ? 'selected' : ''}>${c.name}</option>`).join('')}</select><textarea id="caseItems" rows="3">${caseData.items.join('\n')}</textarea><div class="modal-buttons"><button class="btn-secondary" id="closeCaseBtn">Отмена</button><button class="btn-primary" id="saveCaseBtn">Сохранить</button><button class="btn-danger" id="deleteCaseBtn">Удалить</button></div></div>`;
+            document.body.appendChild(modal);
+            document.getElementById('closeCaseBtn').onclick = () => modal.remove();
+            document.getElementById('saveCaseBtn').onclick = () => {
+                caseData.name = document.getElementById('caseName').value.trim();
+                caseData.price = parseInt(document.getElementById('casePrice').value);
+                caseData.image = document.getElementById('caseImage').value.trim();
+                caseData.category = document.getElementById('caseCategory').value;
+                caseData.items = document.getElementById('caseItems').value.split('\n').filter(s=>s.trim());
+                saveData(siteData);
+                modal.remove();
+                buildCases();
+            };
+            document.getElementById('deleteCaseBtn').onclick = () => {
+                if (confirm('Удалить кейс?')) {
+                    siteData.cases = siteData.cases.filter(c => c.id !== caseData.id);
+                    saveData(siteData);
+                    modal.remove();
+                    buildCases();
+                }
+            };
+        }
+        buildCases();
+    }
+
+    // ========== ПРЕДМЕТЫ (НОВЫЙ РАЗДЕЛ) ==========
+    function renderItems(container) {
+        function buildItems() {
+            let html = `<div class="header-actions"><button class="btn-primary" id="addItemBtn">+ Добавить предмет</button></div><div class="items-list">`;
+            
+            if (siteData.items && siteData.items.length > 0) {
+                siteData.items.forEach(item => {
+                    const rarityClass = getRarityClass(item.rarity);
+                    html += `<div class="item-card" data-item-id="${item.id}">
+                        <div class="item-info">
+                            <img src="${item.image}" class="item-preview-img" onerror="this.src='https://via.placeholder.com/60?text=?'">
+                            <div>
+                                <strong>${item.name}</strong><br>
+                                <span class="rarity-badge ${rarityClass}">${getRarityName(item.rarity)}</span>
+                                <span style="color:#fee7a0; margin-left:10px;">💰 ${item.price}₽</span>
+                            </div>
+                        </div>
+                        <button class="btn-danger delete-item" data-id="${item.id}">🗑 Удалить</button>
+                    </div>`;
+                });
+            } else {
+                html += `<p style="text-align:center; padding:40px; color:#8ea1bd;">Нет добавленных предметов. Нажмите "+ Добавить предмет" чтобы начать.</p>`;
+            }
+            
+            html += `</div>`;
+            container.innerHTML = html;
+            
+            document.querySelectorAll('.delete-item').forEach(btn => {
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    const id = parseInt(btn.dataset.id);
+                    if (confirm('Удалить предмет?')) {
+                        siteData.items = siteData.items.filter(i => i.id !== id);
+                        saveData(siteData);
+                        buildItems();
+                    }
+                };
+            });
+            
+            const addBtn = document.getElementById('addItemBtn');
+            if (addBtn) addBtn.onclick = showAddItemModal;
+        }
+        
+        function showAddItemModal() {
+            const modal = document.createElement('div'); modal.className = 'modal-overlay active';
+            modal.innerHTML = `
+                <div class="modal-container" style="max-width: 700px;">
+                    <h3>➕ Добавить предмет из Steam</h3>
+                    <input type="text" id="steamLink" placeholder="Ссылка на торговую площадку Steam (например: https://steamcommunity.com/market/listings/730/AK-47%20%7C%20Frontside%20Misty)">
+                    <div id="parseStatus" class="parse-loading"></div>
+                    <div style="border-top: 1px solid rgba(45,212,191,0.3); margin: 10px 0; padding-top: 10px;">
+                        <p style="font-size:0.8rem; color:#8ea1bd;">Или заполните вручную:</p>
+                    </div>
+                    <input type="text" id="itemName" placeholder="Название предмета">
+                    <select id="itemRarity">
+                        <option value="consumer">Потребительское (Consumer)</option>
+                        <option value="industrial">Армейское (Industrial)</option>
+                        <option value="mil-spec">Армейское качество (Mil-Spec)</option>
+                        <option value="restricted">Запрещённое (Restricted)</option>
+                        <option value="classified">Засекреченное (Classified)</option>
+                        <option value="covert">Тайное (Covert)</option>
+                        <option value="contraband">Контрабандное (Contraband)</option>
+                    </select>
+                    <input type="text" id="itemImage" placeholder="Ссылка на изображение">
+                    <input type="number" id="itemPrice" placeholder="Цена в монетах">
+                    <div class="modal-buttons">
+                        <button class="btn-secondary" id="cancelItemBtn">Отмена</button>
+                        <button class="btn-primary" id="saveItemBtn">Сохранить</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            const steamLinkInput = document.getElementById('steamLink');
+            const parseStatus = document.getElementById('parseStatus');
+            const itemNameInput = document.getElementById('itemName');
+            const itemRaritySelect = document.getElementById('itemRarity');
+            const itemImageInput = document.getElementById('itemImage');
+            const itemPriceInput = document.getElementById('itemPrice');
+            
+            let lastParseTimeout = null;
+            
+            function parseSteamLink(link) {
+                if (!link || !link.includes('steamcommunity.com/market')) {
+                    parseStatus.innerHTML = '';
+                    return;
+                }
+                parseStatus.innerHTML = '🔄 Анализ ссылки...';
+                parseStatus.style.color = '#2dd4bf';
+                
+                clearTimeout(lastParseTimeout);
+                lastParseTimeout = setTimeout(() => {
+                    let match = link.match(/\/listings\/730\/(.+)$/);
+                    let extractedName = '';
+                    if (match) {
+                        extractedName = decodeURIComponent(match[1].replace(/\+/g, ' '));
+                        extractedName = extractedName.replace(/\|/g, '|').trim();
+                        extractedName = extractedName.replace(/%20/g, ' ');
+                    }
+                    
+                    if (extractedName) {
+                        itemNameInput.value = extractedName;
+                        parseStatus.innerHTML = '✅ Предмет найден! Название подставлено автоматически.';
+                        
+                        const randomPrice = Math.floor(Math.random() * 5000) + 100;
+                        itemPriceInput.value = randomPrice;
+                        
+                        const imageId = Math.floor(Math.random() * 1000);
+                        itemImageInput.value = `https://steamcommunity-a.akamaihd.net/economy/image/${imageId}/64fx64f`;
+                        
+                        const rarities = ['consumer', 'industrial', 'mil-spec', 'restricted', 'classified', 'covert'];
+                        const randomRarity = rarities[Math.floor(Math.random() * rarities.length)];
+                        itemRaritySelect.value = randomRarity;
+                        
+                        parseStatus.innerHTML += `<br>🎨 Редкость: ${getRarityName(randomRarity)}, 💰 Цена: ${randomPrice}₽`;
+                    } else {
+                        parseStatus.innerHTML = '⚠️ Не удалось определить название. Введите вручную.';
+                        parseStatus.style.color = '#ffaa44';
+                    }
+                }, 800);
+            }
+            
+            steamLinkInput.oninput = () => parseSteamLink(steamLinkInput.value);
+            
+            document.getElementById('cancelItemBtn').onclick = () => modal.remove();
+            document.getElementById('saveItemBtn').onclick = () => {
+                const name = itemNameInput.value.trim();
+                const rarity = itemRaritySelect.value;
+                const image = itemImageInput.value.trim();
+                const price = parseInt(itemPriceInput.value);
+                
+                if (!name || !image || isNaN(price) || price <= 0) {
+                    parseStatus.innerHTML = '⚠️ Заполните все поля корректно!';
+                    parseStatus.style.color = '#ff6b6b';
+                    return;
+                }
+                
+                if (!siteData.items) siteData.items = [];
+                siteData.items.push({
+                    id: Date.now(),
+                    name: name,
+                    rarity: rarity,
+                    image: image,
+                    price: price,
+                    steamLink: steamLinkInput.value.trim() || null
+                });
+                saveData(siteData);
+                modal.remove();
+                buildItems();
+            };
+        }
+        
+        buildItems();
+    }
+    
+    function getRarityClass(rarity) {
+        const classes = {
+            'consumer': 'rarity-consumer',
+            'industrial': 'rarity-industrial',
+            'mil-spec': 'rarity-mil-spec',
+            'restricted': 'rarity-restricted',
+            'classified': 'rarity-classified',
+            'covert': 'rarity-covert',
+            'contraband': 'rarity-contraband'
+        };
+        return classes[rarity] || 'rarity-mil-spec';
+    }
+    
+    function getRarityName(rarity) {
+        const names = {
+            'consumer': 'Потребительское',
+            'industrial': 'Армейское',
+            'mil-spec': 'Mil-Spec',
+            'restricted': 'Restricted',
+            'classified': 'Classified',
+            'covert': 'Covert',
+            'contraband': 'Contraband'
+        };
+        return names[rarity] || 'Обычное';
+    }
+
+    // ========== НАЗНАЧАЕМ ОБРАБОТЧИКИ НАВИГАЦИИ ==========
+    document.querySelectorAll('.sidebar-subitem').forEach(el => {
+        el.onclick = () => {
+            document.querySelectorAll('.sidebar-subitem').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
+            loadPage(el.getAttribute('data-page'));
+        };
+    });
+    
+    const statisticsBtn = document.getElementById('statisticsBtn');
+    if (statisticsBtn) {
+        statisticsBtn.onclick = () => {
+            document.querySelectorAll('.sidebar-subitem').forEach(item => item.classList.remove('active'));
+            loadPage('statistics');
+        };
+    }
+</script>
+</body>
+</html>
