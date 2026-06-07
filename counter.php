@@ -1,59 +1,67 @@
 <?php
 // Файл counter.php - положите в ту же папку что и index.html
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Headers: Content-Type');
 
-$dataFile = 'online_data.json';
-$timeout = 60; // секунд бездействия (60 секунд)
+$dataFile = dirname(__FILE__) . '/online_data.json';
+$timeout = 60; // секунд бездействия
 
-// Загружаем текущие данные
-if (file_exists($dataFile)) {
-    $data = json_decode(file_get_contents($dataFile), true);
-} else {
-    $data = ['visitors' => [], 'online' => 0];
+// Создаем файл если не существует
+if (!file_exists($dataFile)) {
+    $defaultData = ['visitors' => [], 'online' => 0, 'last_cleanup' => time()];
+    file_put_contents($dataFile, json_encode($defaultData));
+    chmod($dataFile, 0666);
+}
+
+// Загружаем данные
+$data = json_decode(file_get_contents($dataFile), true);
+if (!$data) {
+    $data = ['visitors' => [], 'online' => 0, 'last_cleanup' => time()];
 }
 
 $action = isset($_POST['action']) ? $_POST['action'] : '';
 $visitorId = isset($_POST['visitor_id']) ? $_POST['visitor_id'] : '';
 
-if ($action === 'register') {
-    // Регистрация нового посетителя
-    if ($visitorId && !isset($data['visitors'][$visitorId])) {
-        $data['visitors'][$visitorId] = time();
-        $data['online']++;
-    }
-    
-} elseif ($action === 'heartbeat') {
-    // Обновление времени активности
-    if ($visitorId && isset($data['visitors'][$visitorId])) {
-        $data['visitors'][$visitorId] = time();
-    }
-    
-} elseif ($action === 'unregister') {
-    // Удаление посетителя
-    if ($visitorId && isset($data['visitors'][$visitorId])) {
-        unset($data['visitors'][$visitorId]);
-        $data['online']--;
-    }
-}
-
-// Удаляем неактивных посетителей (таймаут)
+// Очистка неактивных
 $currentTime = time();
-$changed = false;
+$cleaned = false;
 foreach ($data['visitors'] as $id => $lastSeen) {
     if ($currentTime - $lastSeen > $timeout) {
         unset($data['visitors'][$id]);
-        $data['online']--;
-        $changed = true;
+        $cleaned = true;
     }
 }
+if ($cleaned) {
+    $data['online'] = count($data['visitors']);
+}
 
-if ($changed) {
-    $data['online'] = max(0, $data['online']);
+if ($action === 'register') {
+    if ($visitorId && !isset($data['visitors'][$visitorId])) {
+        $data['visitors'][$visitorId] = $currentTime;
+        $data['online'] = count($data['visitors']);
+    }
+} elseif ($action === 'heartbeat') {
+    if ($visitorId && isset($data['visitors'][$visitorId])) {
+        $data['visitors'][$visitorId] = $currentTime;
+    } elseif ($visitorId && !isset($data['visitors'][$visitorId])) {
+        // Если посетитель потерялся, регистрируем заново
+        $data['visitors'][$visitorId] = $currentTime;
+        $data['online'] = count($data['visitors']);
+    }
+} elseif ($action === 'unregister') {
+    if ($visitorId && isset($data['visitors'][$visitorId])) {
+        unset($data['visitors'][$visitorId]);
+        $data['online'] = count($data['visitors']);
+    }
 }
 
 // Сохраняем данные
 file_put_contents($dataFile, json_encode($data));
+if (file_exists($dataFile)) {
+    chmod($dataFile, 0666);
+}
 
-// Возвращаем количество онлайн
-header('Content-Type: application/json');
-echo json_encode(['online' => $data['online']]);
+echo json_encode(['online' => $data['online'], 'success' => true]);
 ?>
